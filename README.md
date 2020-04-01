@@ -2,38 +2,96 @@
 **A Distributed Applications II Project**  
 Aaron Lu - 101278524
 
-### Presentation
-https://slides.com/aalu1418/dapp2_project/fullscreen
+[Hyperledger Fabric + Aircraft MRO Pitch Presentation](https://slides.com/aalu1418/dapp2_project/fullscreen)
 
-### Planning
-- Hyperledger Fabric (maintenance schedule + parts provenance)
-- Express API
-- Deployed React front-end
-- Status indicator for front-end on connecting to API (see if it's still active)
-- Test cases
-- CI/CD
+---
+## Description
+The aerospace industry has a vast and complex supply chain involving hundreds to thousands of companies and millions of parts. The entire supply chain must meet specific regulations and procedures specified by governing bodies from governments and other organizations. The many facets of the supply chain can be seen in the various phases of aircraft development and deployment - parts procurement, aircraft assembly, certification, delivery, maintenance, and end-of-life.
 
-### Data
+This project does not seek to provide a umbrella solution for the entire aerospace supply chain, but instead, a targeted solution for airline companies and the required maintenance, repair, and overhaul (MRO) cycle for purchased aircraft. The goal is to digitize maintenance and parts provenance records in a manner that increases trust when the aircraft is sold, saves money through a more streamlined process, and most importantly, increase the safety of air travel.
+
+The proposed solution hopes to accomplish the most paradoxical problem in supply chain: how to increase reliability, safety, and quality while decreasing cost.
+
+### Background
+For a typical airline company like Air Canada, Delta, KLM, etc, an aircraft follows the cycle shown in the figure below:
+![](./documentation/lifeCycle.png)  
+The aircraft is delivered and the cycle of maintenance and flights occur until it is determined to be sold or scrapped. During MRO procedures, parts can be supplied as brand new from external suppliers or they may be recovered from a scrapped aircraft. These parts are still viable for use because they have not exceeded their flight hours threshold.
+
+The issue is that maintenance records are often still tracked on paper, and the record for an aircraft may be binders full of various pieces of information. Additionally, parts that have been used in other aircraft may not have the correct provenance and be missing critical information regarding their lifespan. Overall, information is more difficult to find and track which puts customers lives at stake, and introduces inefficiencies to very carefully optimized plan of flight schedules.
+
+### Solution Architecture
+The proposed solution leverages blockchain technology through Hyperledger Fabric for tracking and sharing information within an airline and with other airlines when an aircraft is to be sold. Maintenance and parts provenance records can be easily stored on the blockchain network by MRO providers through manually updates, and IoT device integration.
+
+Internet of things (IoT) devices allow for flight records to be automatically generated for the aircraft and its associated parts. The devices can track temperature and acceleration to track the various stresses and conditions and note if abnormal conditions were encountered. This information would be stored on the blockchain to provide an immutable record for the history of an aircraft or part.
+
+However, IoT devices often provide massive amounts of information and analyzing the information for dangerous patterns is difficult. In addition to blockchain and IoT technology, the proposed solution would include a machine learning algorithm for predictive maintenance. By accessing the maintenance records and IoT data across multiple aircraft, the algorithm would be able to alert maintainers of possible issues or note-worthy trends in aircraft condition.
+
+### Timeline/Implementation
+![](./documentation/timeline.png)
+
+---
+## Technical Details (PoC)
+The section discusses the technical parameters used in the Hyperledger Fabric, the Expresss API, and the React front-end.
+
+### Architecture
+**Hyperledger Fabric**  
+Blockchain as a backend where information about aircraft and parts can be stored according to the data and parameters specified below. Current implementation uses only a single channel, user, and admin for proof of concept. Future implementations would use different channels, users, admins, and private data storage depending on the scale and number of companies.
+
+**Express API**  
+Express.js is used as the API to connect to a cloud-based instance of Hyperledger Fabric. In this case, the instance is based in a Google Cloud virtual machine. Future implementation would include multiple APIs spread across various nodes/clients. Additionally, the cloud-based instance would most likely be shifted from a virtual machine to a cloud-based kubernetes cluster.
+
+**React**  
+React is the demonstration front-end for a single login point while in the PoC phase. Additionally, the site should be mobile friendly for maintainers to easily use it on the job without needing a large device. In the future, companies would be able to create their own front-end applications to interface with different API endpoints.
+
+### Modeling
+The following diagram shows the 5 different types of interactions for the PoC.
+1. Airline adminstrator onboards a new aircraft from manufacturer.
+1. Maintainer requests information about the aircraft after a flight and before maintenance.
+1. Maintainer submits maintenance information about the aircraft before a flight.
+1. Administrator requests information on entire fleet.
+1. Administrator sells or scraps the aircraft.
+
+_Note: IoT devices and predictive maintenance are not implemented in PoC_
+
+![](./documentation/sequenceDiagram.png)
+
+### Data/Parameters
 - Aircraft
-  - maintenance schedules (type, date, history)
+  - description
+  - maintenance schedules (type, due date, last completed)
   - parts list
   - flight hours
-  - maintenance reports (type, information)
+  - maintenance reports (date, type, notes, parts replaced)
   - owner (name, purchase date, sold date)
 - Part
+  - description
   - current aircraft
   - total hours
   - maximum hours
   - history (aircraft, hours, on date, off date)
+- User
+  - Type
+  - Company
+  - Aircraft permissions
 
-### Life Cycle of Airliner
-![](./documentation/lifeCycle.png)
+### Functions  
+- register user
+- assign aircraft
+- get aircraft information
+- get part information
+- update flight hours
+- perform maintenance
+- replace part
+- sell aircraft
 
-### Timeline
-![](./documentation/timeline.png)
-
-### Sequence Diagram
-![](./documentation/sequenceDiagram.png)
+## Planning/Goals
+- Hyperledger Fabric (maintenance schedule + parts provenance)
+- Express API
+- Deployed React front-end
+- Mobile friendly site
+- Status indicator for front-end on connecting to API (see if it's still active)
+- Test cases for chaincode & API
+- CI/CD
 
 ### Resources
 - https://www.icao.int/safety/airnavigation/OPS/airworthiness/Pages/EAMR.aspx
