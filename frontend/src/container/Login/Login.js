@@ -64,7 +64,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="container">
+    <div className="login-container">
       <LoginCard
         heading="User Login"
         onClick={loginHandle}

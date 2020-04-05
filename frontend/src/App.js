@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { Login } from "./container/Login/Login";
+import { Aircraft } from "./container/Aircraft/Aircraft"
 
 function App() {
   const [connected, setConnected] = React.useState(false);
@@ -15,7 +16,9 @@ function App() {
     <React.Fragment>
       <NavigationBar connected={connected} />
       <Switch>
-        <Route path="/aircraft"></Route>
+        <Route path="/aircraft">
+          <Aircraft />
+        </Route>
         <Route path="/">
           <Login />
         </Route>
