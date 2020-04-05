@@ -13,11 +13,14 @@ import "./NavigationBar.css";
 
 export const NavigationBar = ({connected}) => {
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Toolbar>
         <FlightTakeoffIcon fontSize="large" />
-        <Typography variant="h6" className="heading">
+        <Typography variant="h6" className="heading-web">
           Airline MRO + Hyperledger Fabric
+        </Typography>
+        <Typography variant="h6" className="heading-mobile">
+          Airline MRO
         </Typography>
         <Box px={2}>
           <Button color="inherit">Login</Button>

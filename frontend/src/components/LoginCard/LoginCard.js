@@ -17,11 +17,11 @@ export const LoginCard = ({
   children
 }) => {
   return (
-    <Box mt={6} mx={5}>
-      <Card raised={true} className="card">
-        <CardHeader title={heading} className="center" />
-        <CardContent className="content center">{children}</CardContent>
-        <CardActions className="center">
+    <Box mt={6} mx={5} className="loginCard-container">
+      <Card raised={true} className="loginCard-card">
+        <CardHeader title={heading} className="loginCard-center" />
+        <CardContent className="loginCard-content loginCard-center">{children}</CardContent>
+        <CardActions className="loginCard-center">
           <Button
             fullWidth={true}
             variant="contained"

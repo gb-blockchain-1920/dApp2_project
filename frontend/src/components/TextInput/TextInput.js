@@ -4,8 +4,8 @@ import "./TextInput.css";
 
 export const TextInput = ({ ...props }) => {
   return (
-    <Box my={1}>
-      <TextField {...props} variant="outlined" />
+    <Box my={1} className="boxWidth">
+      <TextField {...props} variant="outlined" fullWidth={true}/>
     </Box>
   );
 };
