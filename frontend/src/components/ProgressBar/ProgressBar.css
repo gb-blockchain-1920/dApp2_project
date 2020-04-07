@@ -1,0 +1,22 @@
+.bar-container {
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  align-items: center;
+}
+
+.bar-indicator {
+  /* width: 10rem; */
+  width: 100%;
+  height: 0.5rem !important;
+}
+
+.bar-label {
+  width: 25rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .bar-label {
+    width: 15rem;
+  }
+}

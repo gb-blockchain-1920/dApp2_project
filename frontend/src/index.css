@@ -1,5 +1,6 @@
 html {
   background-color: #303030;
+  min-height: 100%;
 }
 
 body {
@@ -9,9 +10,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100vh;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+#root {
+  height: 92vh;
 }
