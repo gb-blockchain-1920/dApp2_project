@@ -64,10 +64,8 @@ class airlineMRO extends Contract {
             "======== START : Approve company for user data access =========="
         );
         user = JSON.parse(user);
-        //  `relations` created for 2-way access like if company id is given then list of users will be fetched  and vice versa too.
-        const relations = "user"; //  relation type to be stored on blockchain (company~user or user~company)
-        console.log(user, user.type, user.company, user.username);
-        const compositeKey = await ctx.stub.createCompositeKey(relations, [
+        // console.log(user, user.type, user.company, user.username);
+        const compositeKey = await ctx.stub.createCompositeKey("user", [
             user.type.toString(),
             user.company.toString(),
             user.username.toString()
@@ -87,6 +85,19 @@ class airlineMRO extends Contract {
         console.log(
             "======== END : Relation of approved companies for users stored ========="
         );
+    }
+
+    async checkUser(ctx, user) {
+        user = JSON.parse(user);
+        // console.log(user, user.type, user.company, user.username);
+        const compositeKey = await ctx.stub.createCompositeKey("user", [
+            user.type.toString(),
+            user.company.toString(),
+            user.username.toString()
+        ]);
+        const userAsBytes = await ctx.stub.getState(compositeKey); //  get the user from the chaincode state
+        console.log(JSON.parse(userAsBytes.toString()));
+        return true;
     }
 }
 
