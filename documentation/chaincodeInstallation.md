@@ -23,9 +23,9 @@ Install the the chaincode in the correct directory and move the start script to 
 ```
 cd
 git clone https://github.com/aalu1418/dApp2_project
-cp -R ./dApp2_project/chaincode/. ./fabric-samples/chaincode/eKYC
+cp -R ./dApp2_project/chaincode/. ./fabric-samples/chaincode/airlineMRO
 cd ./fabric-samples/chaincode
-mv ./eKYC/start_ekyc.sh ../fabcar
+mv ./eKYC/start_airlineMRO.sh ../fabcar
 ```
 If necessary change the permissions on the `start_ekyc.sh` script and run
 ```
@@ -33,7 +33,7 @@ cd ../fabcar
 chmod 777 start_ekyc.sh
 ./start_ekyc.sh
 ```
-Get the API code from the repository
+<!-- Get the API code from the repository
 ```
 cd
 git clone https://github.com/aalu1418/dApp1_project
@@ -53,4 +53,4 @@ npm start
 ```
 This will start the express server at `http://localhost:3000`. If you are in GCP, it will start the server at `http://<your GCP external IP>:3000`. Please note that you have to enable the firewall rules to allow port 3000 to be exposed in your GCP Compute Engine.
 
-Then from your local machine, deploy the code in the `frontend` folder using `npm start`.
+Then from your local machine, deploy the code in the `frontend` folder using `npm start`. -->

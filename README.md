@@ -95,6 +95,8 @@ _Stored in Hyperledger Fabric_
 
 | Parameter  | Type                | Description                                                                                          |
 | ---------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
+| `username` | `string`            | stored username                                                                                      |
+| `password` | `string`            | hashed password                                                                                      |
 | `type`     | `string`            | Can be `admin` or `maintainer`                                                                       |
 | `company`  | `string`            | The company that the user works for                                                                  |
 | `aircraft` | `[aircraftID, ...]` | An array of aircraftID that the user has access to maintenance records of the corresponding aircraft |
@@ -107,7 +109,7 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 
 | Function Name        | Input                                                                      | Output              | Restricted                  | Details                                                                                                                                     |
 | -------------------- | -------------------------------------------------------------------------- | ------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `registerUser`       | string `username`, string `password`                                       | bool `success`      | Admin + Maintainer          | Creates a user profile for the admin or maintainer, hashed username and password are stored in blockchain, fails if username already exists |
+| `registerUser`       | string `username`, string `password`, string `type`, string `company`      | bool `success`      | Admin + Maintainer          | Creates a user profile for the admin or maintainer, hashed username and password are stored in blockchain, fails if username already exists |
 | `login`              | string `username`, string `password`                                       | bool `success`      | Admin + Maintainer          | Checks the username and password against blockchain information, and returns a boolean                                                      |
 | `registerAircraft`   | string `description`                                                       | string `aircraftID` | Admin                       | Register a new aircraft and create the aircraft object                                                                                      |
 | `assignAircraft`     | string `username`, string `aircraftID`                                     | bool `success`      | Admin                       | Assign the maintainer to the aircraft so they have access to the data                                                                       |
