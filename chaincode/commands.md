@@ -18,10 +18,10 @@ peer chaincode upgrade -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED 
 ```
 `` Note: -v in instantiate and upgrade means version of chaincode you want to deploy and it should be same as given in the install command``
 
-**3. Invoke (To incoke the chaincode)** (As an example: InputData Function)
+**3. Invoke (To incoke the chaincode)**
 ##### a) Preferred way:
 ```
-peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n airlineMRO -c '{"Args":["inputData","USERX1","{firstName:Deep,lastName:Gupta}"]}'
+peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n airlineMRO -c '{"Args":["registerUser","{\"username\":\"hello\",\"password\":\"test\",\"type\":\"administrator\",\"company\":\"delta\"}"]}'
 ```
 ``Output (on CouchDB)``
 ```
@@ -30,18 +30,5 @@ peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src
   "_rev": "2-6078b3400a86cffef56696649ed71c09",
   "user": "{firstName:Deep,lastName:Gupta}",
   "~version": "\u0000CgMBBwA="
-}
-```
-##### b) Alternate way:
-```
-peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n airlineMRO -c '{"Args":["inputData","USER1","{firstName:\"Deep\",lastName:\"Gupta\"}"]}'
-```
-``Output (on CouchDB)``
-```
-{
-  "_id": "USER1",
-  "_rev": "1-4b6a7f7969fe4e71ed0d3ebbf4967afb",
-  "user": "{firstName:\"Deep\",lastName:\"Gupta\"}",
-  "~version": "\u0000CgMBCAA="
 }
 ```

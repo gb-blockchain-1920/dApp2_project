@@ -66,6 +66,7 @@ class airlineMRO extends Contract {
 
         //  `relations` created for 2-way access like if company id is given then list of users will be fetched  and vice versa too.
         const relations = "user"; //  relation type to be stored on blockchain (company~user or user~company)
+        console.log(user, user.type, user.company, user.username);
         const compositeKey = await ctx.stub.createCompositeKey(relations, [
             user.type.toString(),
             user.company.toString(),
