@@ -1,7 +1,7 @@
 {
-    "name": "eKYC",
+    "name": "airlineMRO",
     "version": "1.0.0",
-    "description": "eKYC contract implemented in JavaScript",
+    "description": "airlineMRO contract implemented in JavaScript",
     "main": "index.js",
     "engines": {
         "node": ">=8",

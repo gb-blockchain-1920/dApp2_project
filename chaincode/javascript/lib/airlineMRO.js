@@ -6,7 +6,7 @@
 
 const { Contract } = require('fabric-contract-api');
 
-class eKYC extends Contract {
+class airlineMRO extends Contract {
 
     async initLedger(ctx) {
         console.info('============= START : Initialize Ledger ===========');
@@ -160,4 +160,4 @@ class eKYC extends Contract {
     }
 }
 
-module.exports = eKYC;
+module.exports = airlineMRO;

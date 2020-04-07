@@ -4,24 +4,24 @@
 
 **1. Install (To install the chaincode)**
 ```
-peer chaincode install -l node -n eKYC -v 1.2 -p /opt/gopath/src/github.com/chaincode/eKYC/javascript/
+peer chaincode install -l node -n airlineMRO -v 1.2 -p /opt/gopath/src/github.com/chaincode/airlineMRO/javascript/
 ```
 
 **2. a) Instantiate (To instantiate/deploy the chaincode)**
 ```
-peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n eKYC -v 1.2 -c '{"Args":["initLedger"]}' -P "OR ('Org1MSP.member','Org2MSP.member')"
+peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n airlineMRO -v 1.2 -c '{"Args":["initLedger"]}' -P "OR ('Org1MSP.member','Org2MSP.member')"
 ```
 
 **2. b) Upgrade (To upgrade/deploy again the chaincode)**
 ```
-peer chaincode upgrade -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n eKYC -v 1.2 -c '{"Args":["initLedger"]}' -P "OR ('Org1MSP.member','Org2MSP.member')"
+peer chaincode upgrade -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n airlineMRO -v 1.2 -c '{"Args":["initLedger"]}' -P "OR ('Org1MSP.member','Org2MSP.member')"
 ```
 `` Note: -v in instantiate and upgrade means version of chaincode you want to deploy and it should be same as given in the install command``
 
 **3. Invoke (To incoke the chaincode)** (As an example: InputData Function)
 ##### a) Preferred way:
 ```
-peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n eKYC -c '{"Args":["inputData","USERX1","{firstName:Deep,lastName:Gupta}"]}'
+peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n airlineMRO -c '{"Args":["inputData","USERX1","{firstName:Deep,lastName:Gupta}"]}'
 ```
 ``Output (on CouchDB)``
 ```
@@ -34,7 +34,7 @@ peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src
 ```
 ##### b) Alternate way:
 ```
-peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n eKYC -c '{"Args":["inputData","USER1","{firstName:\"Deep\",lastName:\"Gupta\"}"]}'
+peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n airlineMRO -c '{"Args":["inputData","USER1","{firstName:\"Deep\",lastName:\"Gupta\"}"]}'
 ```
 ``Output (on CouchDB)``
 ```
