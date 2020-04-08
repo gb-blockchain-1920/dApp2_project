@@ -219,7 +219,7 @@ class airlineMRO extends Contract {
         console.log("======== END : Register Aircraft =========");
     }
 
-    async getAicraft(ctx, tailNumber) {
+    async getAircraft(ctx, tailNumber) {
       const data = await ctx.stub.getState(tailNumber);
       return JSON.parse(data.toString());
     }
