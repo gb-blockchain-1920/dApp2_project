@@ -65,11 +65,10 @@ class airlineMRO extends Contract {
         );
         user = JSON.parse(user);
         // console.log(user, user.type, user.company, user.username);
-        const compositeKey = await ctx.stub.createCompositeKey("user", [
+        const compositeKey = await ctx.stub.createCompositeKey(
             user.type.toString(),
-            user.company.toString(),
-            user.username.toString()
-        ]); //  create company~user relation unique key
+            [user.company.toString(), user.username.toString()]
+        ); //  create company~user relation unique key
 
         // Validations for composite keys created
         if (!compositeKey) {
@@ -90,14 +89,14 @@ class airlineMRO extends Contract {
     async checkUser(ctx, user) {
         user = JSON.parse(user);
         // console.log(user, user.type, user.company, user.username);
-        const compositeKey = await ctx.stub.createCompositeKey("user", [
+        const compositeKey = await ctx.stub.createCompositeKey(
             user.type.toString(),
-            user.company.toString(),
-            user.username.toString()
-        ]);
-        const userAsBytes = await ctx.stub.getState(compositeKey); //  get the user from the chaincode state
-        console.log(JSON.parse(userAsBytes.toString()));
-        return true;
+            [user.company.toString(), user.username.toString()]
+        );
+        let userData = await ctx.stub.getState(compositeKey); //  get the user from the chaincode state
+        // console.log(JSON.parse(userData.toString()));
+        userData = JSON.parse(userData.toString());
+        return user.password == userData.password;
     }
 }
 
