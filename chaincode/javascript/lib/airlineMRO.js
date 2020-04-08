@@ -120,7 +120,7 @@ class airlineMRO extends Contract {
         user.aircraft = []; //initialize aircraft array for user
 
         //check if admin for company already exists or if user already exists
-        let output = null;
+        let output;
         if (user.type.toString() == "maintainer") {
             const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
                 "maintainer",
@@ -131,7 +131,7 @@ class airlineMRO extends Contract {
             output = await ctx.stub.getState(compositeKey);
             output = output.toString();
         }
-        if (output != null) {
+        if (output.length != 0) {
             console.log(output);
             throw new Error("user exists");
         }
