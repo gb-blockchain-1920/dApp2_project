@@ -152,9 +152,71 @@ class airlineMRO extends Contract {
             [user.company.toString(), user.username.toString()]
         );
         let userData = await ctx.stub.getState(compositeKey); //  get the user from the chaincode state
-        // console.log(JSON.parse(userData.toString()));
+        console.log(JSON.parse(userData.toString()));
         userData = JSON.parse(userData.toString());
         return user.password == userData.password;
+    }
+
+    async registerAircraft(ctx, aircraft, tailNumber, company) {
+      console.log("======== START : Register Aircraft ==========");
+
+        const aircraftObj = {
+            description: { aircraft, tailNumber },
+            maintenanceSchedule: [
+                {
+                    type: "A",
+                    lastCompletedDate: null,
+                    lastCompletedHours: 0,
+                    maxHours: 600
+                },
+                {
+                    type: "B",
+                    lastCompletedDate: null,
+                    lastCompletedHours: 0,
+                    maxHours: 2500
+                },
+                {
+                    type: "C",
+                    lastCompletedDate: null,
+                    lastCompletedHours: 0,
+                    maxHours: 8000
+                },
+                {
+                    type: "D",
+                    lastCompletedDate: null,
+                    lastCompletedHours: 0,
+                    maxHours: 25000
+                }
+            ],
+            partsList: [],
+            flightHours: 0,
+            owner: [{ company, purchaseDate: new Date(), soldDate: null }],
+            maintainers: [],
+            maintenanceReports: []
+        };
+        //create new aircraft object
+        await ctx.stub.putState(
+            tailNumber,
+            Buffer.from(JSON.stringify(aircraftObj))
+        );
+
+        //assign aircraft to company admin
+        const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
+            "administrator",
+            [company]
+        );
+        const username = await this.compositeKeyLoop(ctx, compositeIterator, 1);
+        const compositeKey = await ctx.stub.createCompositeKey(
+            "administrator",
+            [company.toString(), username[0].toString()]
+        );
+        let userData = await ctx.stub.getState(compositeKey);
+        userData = JSON.parse(userData.toString());
+        userData.aircraft.push(tailNumber);
+        console.log(userData);
+        await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(userData)));
+
+        console.log("======== END : Register Aircraft =========");
     }
 }
 
