@@ -59,29 +59,46 @@ class airlineMRO extends Contract {
     // }
 
     async getCompanies(ctx) {
-      const compositeIterator = await ctx.stub.getStateByPartialCompositeKey("administrator", [])
+        const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
+            "administrator",
+            []
+        );
+        return compositeKeyLoop(ctx, compositeIterator, 0)
+    }
 
-      let companies = [];    //  To store list of company Ids if userId is passed as input in function and to store list of userIds if compnayId is passed as input in function
+    async getMaintainers(ctx, company) {
+      const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
+          "maintainer",
+          [company.toString()]
+      );
+      return compositeKeyLoop(ctx, compositeIterator, 1)
+    }
+
+    async compositeKeyLoop(ctx, compositeIterator, attributeIndex) {
+      let list = []; //  To store list of company Ids if userId is passed as input in function and to store list of userIds if compnayId is passed as input in function
       while (true) {
-
           const responseRange = await compositeIterator.next();
 
           //  Validation if list of userIds or companyIds is empty
-          if (!responseRange || !responseRange.value || !responseRange.value.key) {
-              console.log('end of data');
-              console.log(`relationsArray: ${companies}`);
-              return companies;
+          if (
+              !responseRange ||
+              !responseRange.value ||
+              !responseRange.value.key
+          ) {
+              console.log("end of data");
+              return JSON.parse(list);
           }
 
-          console.log(`Response value: ${responseRange.value.key.toString('utf8')}`);
+          console.log(
+              `Response value: ${responseRange.value.key.toString("utf8")}`
+          );
           let userType;
           let attributes;
           //  Split the composite key to get the companyIds and userIds
-          ({
-              userType,
-              attributes
-          } = await ctx.stub.splitCompositeKey(responseRange.value.key));
-          companies.push(attributes[0]);   //  Adding the list of userIds if filtered on the basis of companyIds or vice versa.
+          ({ userType, attributes } = await ctx.stub.splitCompositeKey(
+              responseRange.value.key
+          ));
+          list.push(attributes[attributeIndex]); //  Adding the list of userIds if filtered on the basis of companyIds or vice versa.
       }
     }
 

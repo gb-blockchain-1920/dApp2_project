@@ -23,12 +23,3 @@ peer chaincode upgrade -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED 
 ```
 peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n airlineMRO -c '{"Args":["registerUser","{\"username\":\"hello\",\"password\":\"test\",\"type\":\"administrator\",\"company\":\"delta\"}"]}'
 ```
-``Output (on CouchDB)``
-```
-{
-  "_id": "USERX1",
-  "_rev": "2-6078b3400a86cffef56696649ed71c09",
-  "user": "{firstName:Deep,lastName:Gupta}",
-  "~version": "\u0000CgMBBwA="
-}
-```
