@@ -134,7 +134,7 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 | `\aircraft` | GET   | `getAircraft`        | object `aircraft`     |
 | `\aircraft` | PATCH | `performMaintenance` | object `aircraft`     |
 | `\part`     | GET   | `getPart`            | object `part`         |
-| `\part`     | POST  | `newPart`            | string `partID`           |
+| `\part`     | POST  | `newPart`            | string `partID`       |
 | `\part`     | PATCH | `replaceParts`       | bool `success`        |
 | `\flight`   | POST  | `updateFlightHours`  | number `hours`        |
 | `\admin`    | POST  | `assignAircraft`     | bool `success`        |
