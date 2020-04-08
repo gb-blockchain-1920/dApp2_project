@@ -86,7 +86,7 @@ class airlineMRO extends Contract {
                 !responseRange.value.key
             ) {
                 console.log("end of data");
-                return JSON.parse(list);
+                return list;
             }
 
             console.log(
