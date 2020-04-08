@@ -86,7 +86,7 @@ _Stored in Hyperledger Fabric_
 
 | Parameter      | Type                                                                      | Description                                                                                                        |
 | -------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `description`  | `{string number, string name}`                                            | Number refers to the general part number, especially for replaceable parts, name is a written out name of the part |
+| `description`  | `{string id, string name}`                                            | Number refers to the general part number, especially for replaceable parts, name is a written out name of the part |
 | `totalHours`   | `number`                                                                  | Tracking the total number of flight hours for the part                                                             |
 | `maximumHours` | `number`                                                                  | Maximum flight hours for the part                                                                                  |
 | `history`      | `[{string aircraftID, number hours, number onDate, number offDate}, ...]` | Array showing history of the part, the last index is the most recent                                               |
@@ -114,26 +114,32 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 | `registerAircraft`   | string `description`                                                       | string `aircraftID` | Admin                       | Register a new aircraft and create the aircraft object                                                                                      |
 | `assignAircraft`     | string `username`, string `aircraftID`                                     | bool `success`      | Admin                       | Assign the maintainer to the aircraft so they have access to the data                                                                       |
 | `getAircraft`        | string `aircraftID`                                                        | object `aircraft`   | Admin + Assigned Maintainer | Gets all of the information for a specific aircraft in the format described above                                                           |
+| `newPart` | object `part` | string `partID` | Maintainer | Register new part in system |
 | `getPart`            | string `partID`                                                            | object `part`       | Admin + Assigned Maintainer | Gets all of the information for a specific part in the format described above                                                               |
 | `updateFlightHours`  | string `aircraftID`, number `hours`                                        | number `hours`      | Assigned Maintainer         | Updates the flight hours for the aircraft and its associated parts (in the future this will be called by IoT devices)                       |
 | `performMaintenance` | string `aircraftID`, string `type`, string `notes`, object `replacedParts` | object `aircraft`   | Assigned Maintainer         | Stores the maintenance record for the specified aircraft                                                                                    |
 | `replaceParts`       | string `aircraftID`, object `replacedParts`                                | bool `success`      | Assigned Maintainer         | Updates the aircraft and part objects, if new part is entered it creates a new entry                                                        |
 | `sellAircraft`       | string `aircraftID`, string `username`                                     | bool `success`      | Admin                       | Transfers ownership of aircraft to new account, and removes maintainers access                                                              |
+| `getMaintainers`     | string `company`                                                           | array `maintainers` | Admin                       | Returns a list of all maintainers for a specific company                                                                                    |
+| `getCompanies`       |                                                                            | array `companies`   | Admin + Maintainer          | Returns a list of all companies                                                                                                             |
 
 **API Endpoints**
 
 | Endpoint    | Type  | Chaincode Function   | Returns               |
 | ----------- | ----- | -------------------- | --------------------- |
+| `\`         | GET   | `getCompanies`       | array `companies`     |
 | `\login`    | POST  | `registerUser`       | bool `success`        |
 | `\login`    | GET   | `login`              | string `jsonwebtoken` |
 | `\aircraft` | POST  | `registerAircraft`   | object `aircraft`     |
 | `\aircraft` | GET   | `getAircraft`        | object `aircraft`     |
 | `\aircraft` | PATCH | `performMaintenance` | object `aircraft`     |
 | `\part`     | GET   | `getPart`            | object `part`         |
-| `\part`     | POST  | `replaceParts`       | bool `success`        |
+| `\part`     | POST  | `newPart`            | string `partID`           |
+| `\part`     | PATCH | `replaceParts`       | bool `success`        |
 | `\flight`   | POST  | `updateFlightHours`  | number `hours`        |
 | `\admin`    | POST  | `assignAircraft`     | bool `success`        |
 | `\admin`    | PATCH | `sellAircraft`       | bool `success`        |
+| `\admin`    | GET   | `getMaintainers`     | array `maintainers`   |
 
 ## Planning/Goals
 

@@ -58,6 +58,33 @@ class airlineMRO extends Contract {
     //     console.log('======== END : User Data Stored ===========');
     // }
 
+    async getCompanies(ctx) {
+      const compositeIterator = await ctx.stub.getStateByPartialCompositeKey("administrator", [])
+
+      let companies = [];    //  To store list of company Ids if userId is passed as input in function and to store list of userIds if compnayId is passed as input in function
+      while (true) {
+
+          const responseRange = await compositeIterator.next();
+
+          //  Validation if list of userIds or companyIds is empty
+          if (!responseRange || !responseRange.value || !responseRange.value.key) {
+              console.log('end of data');
+              console.log(`relationsArray: ${companies}`);
+              return companies;
+          }
+
+          console.log(`Response value: ${responseRange.value.key.toString('utf8')}`);
+          let userType;
+          let attributes;
+          //  Split the composite key to get the companyIds and userIds
+          ({
+              userType,
+              attributes
+          } = await ctx.stub.splitCompositeKey(responseRange.value.key));
+          companies.push(attributes[0]);   //  Adding the list of userIds if filtered on the basis of companyIds or vice versa.
+      }
+    }
+
     //  users approves companies to access their information
     async registerUser(ctx, user) {
         console.log(
@@ -77,6 +104,8 @@ class airlineMRO extends Contract {
 
         user.aircraft = []; //initialize aircraft array for user
 
+        //need to check if admin for company already exists or if user already exists
+
         await ctx.stub.putState(
             compositeKey,
             Buffer.from(JSON.stringify(user))
@@ -86,6 +115,7 @@ class airlineMRO extends Contract {
         );
     }
 
+    //check if passwords match
     async checkUser(ctx, user) {
         user = JSON.parse(user);
         // console.log(user, user.type, user.company, user.username);
