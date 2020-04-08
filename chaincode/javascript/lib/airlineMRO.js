@@ -133,6 +133,7 @@ class airlineMRO extends Contract {
           output = await ctx.stub.getState(compositeKey)
         }
         if (output != null) {
+          console.log(output);
           throw new Error("user exists");
         }
 
