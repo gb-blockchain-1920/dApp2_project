@@ -104,9 +104,7 @@ class airlineMRO extends Contract {
 
     //  users approves companies to access their information
     async registerUser(ctx, user) {
-        console.log(
-            "======== START : Approve company for user data access =========="
-        );
+        console.log("======== START : Register User ==========");
         user = JSON.parse(user);
         // console.log(user, user.type, user.company, user.username);
         const compositeKey = await ctx.stub.createCompositeKey(
@@ -124,26 +122,25 @@ class airlineMRO extends Contract {
         //check if admin for company already exists or if user already exists
         let output = null;
         if (user.type.toString() == "maintainer") {
-          const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
-              "maintainer",
-              [user.company.toString()]
-          );
-          output = this.compositeKeyLoop(ctx, compositeIterator, 1);
+            const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
+                "maintainer",
+                [user.company.toString()]
+            );
+            output = await this.compositeKeyLoop(ctx, compositeIterator, 1);
         } else {
-          output = await ctx.stub.getState(compositeKey)
+            output = await ctx.stub.getState(compositeKey);
+            output = output.toString();
         }
         if (output != null) {
-          console.log(output);
-          throw new Error("user exists");
+            console.log(output);
+            throw new Error("user exists");
         }
 
         await ctx.stub.putState(
             compositeKey,
             Buffer.from(JSON.stringify(user))
         ); //  Store composite key relation for user
-        console.log(
-            "======== END : Relation of approved companies for users stored ========="
-        );
+        console.log("======== END : Register User =========");
     }
 
     //check if passwords match
