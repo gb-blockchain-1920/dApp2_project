@@ -344,7 +344,7 @@ class airlineMRO extends Contract {
     }
 
     async replaceParts(ctx, tailNumber, replacedParts) {
-        replacedParts = JSON.parse(replaceParts);
+        replacedParts = JSON.parse(replacedParts);
         const aircraft = this.getAircraft(ctx, tailNumber);
 
         //update part information
