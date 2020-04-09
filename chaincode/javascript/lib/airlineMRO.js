@@ -157,8 +157,9 @@ class airlineMRO extends Contract {
         return user.password == userData.password;
     }
 
+    //register a new aircraft in the blockchain
     async registerAircraft(ctx, aircraft, tailNumber, company) {
-      console.log("======== START : Register Aircraft ==========");
+        console.log("======== START : Register Aircraft ==========");
 
         const aircraftObj = {
             description: { aircraft, tailNumber },
@@ -214,14 +215,239 @@ class airlineMRO extends Contract {
         userData = JSON.parse(userData.toString());
         userData.aircraft.push(tailNumber);
         console.log(userData);
-        await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(userData)));
+        await ctx.stub.putState(
+            compositeKey,
+            Buffer.from(JSON.stringify(userData))
+        );
 
         console.log("======== END : Register Aircraft =========");
     }
 
+    //get aircraft information
     async getAircraft(ctx, tailNumber) {
-      const data = await ctx.stub.getState(tailNumber);
-      return JSON.parse(data.toString());
+        const data = await ctx.stub.getState(tailNumber);
+        return JSON.parse(data.toString());
+    }
+
+    //assign a maintainer to an aircraft
+    async assignAircraft(ctx, username, tailNumber, company) {
+        //add maintainer to aircraft
+        const aircraftData = await this.getAircraft(ctx, tailNumber);
+        aircraftData.maintainers.push(username.toString());
+        await ctx.stub.putState(
+            tailNumber,
+            Buffer.from(JSON.stringify(aircraftData))
+        );
+
+        //add aircraft to maintainer profile
+        const compositeKey = await ctx.stub.createCompositeKey("maintainer", [
+            company.toString(),
+            username.toString()
+        ]);
+        const user = await ctx.stub.getState(compositeKey);
+        user.aircraft.push(tailNumber.toString());
+        await ctx.stub.putState(
+            compositeKey,
+            Buffer.from(JSON.stringify(user))
+        );
+    }
+
+    //register a new part in blockchain
+    async newPart(ctx, part) {
+        part = JSON.parse(part);
+        part.totalHours = 0; //make sure new part hours are set to zero
+        part.history = [];
+
+        //validate that maximumHours exits and is correct
+        if (!part.maximumHours || part.totalHours > part.maximumHours) {
+            throw new Error("incorrect max hours parameter");
+        }
+
+        //verify that no part exists at that ID
+        let check = await ctx.stub.getState(part.description.id);
+        check = check.toString();
+        if (check.length == 0) {
+            throw new Error("part already exists");
+        }
+
+        //save part to chain
+        await ctx.stub.putState(
+            part.description.id,
+            Buffer.from(JSON.stringify(part))
+        );
+    }
+
+    //get part information
+    async getPart(ctx, partID) {
+        const data = await ctx.stub.getState(partID);
+        return JSON.parse(data.toString());
+    }
+
+    //update the flight hours for an aircraft and the associated parts
+    async updateFlightHours(ctx, tailNumber, hours) {
+        //update aircraft hours
+        const aircraft = await this.getAircraft(ctx, tailNumber);
+        if (!Number(hours)) {
+            //validate hours
+            throw new Error("invalid hours");
+        }
+        aircraft.flightHours += Number(hours);
+        await ctx.stub.putState(
+            tailNumber,
+            Buffer.from(JSON.stringify(aircraft))
+        );
+
+        //update part hours
+        for (let ii = 0; ii < aircraft.partsList.length; ii++) {
+            const part = await this.getPart(
+                ctx,
+                aircraft.partsList[ii].toString()
+            );
+            part.totalHours += hours;
+            part.history[part.history.length - 1].hours += hours;
+            await ctx.stub.putState(
+                aircraft.partsList[ii].toString(),
+                Buffer.from(JSON.stringify(part))
+            );
+        }
+    }
+
+    async performMaintenance(ctx, tailNumber, type, notes, replacedParts) {
+        //get aircraft and update maintenanceReports
+        const aircraft = await this.getAircraft(ctx, tailNumber);
+        aircraft.maintenanceReports.push({
+            date: new Date(),
+            type,
+            notes,
+            partsReplaced: replacedParts
+        });
+
+        //update maintenanceSchedule if necessary
+        aircraft.maintenanceSchedule.forEach((obj, index) => {
+            //only save to the correct maintenance type
+            if (obj.type.toString() == type.toString()) {
+                aircraft.maintenanceSchedule[
+                    index
+                ].lastCompletedDate = new Date();
+                aircraft.maintenanceSchedule[index].lastCompletedHours =
+                    aircraft.flightHours;
+            }
+        });
+
+        //save aircraft object
+        await ctx.stub.putState(
+            tailNumber.toString(),
+            Buffer.from(JSON.stringify(aircraft))
+        );
+    }
+
+    async replaceParts(ctx, tailNumber, replacedParts) {
+        replacedParts = JSON.parse(replaceParts);
+        const aircraft = this.getAircraft(ctx, tailNumber);
+
+        //update part information
+        for (let ii = 0; i < Object.keys(replacedParts).length; i++) {
+            const newPartID = Object.values(replacedParts)[ii];
+            const oldPartID = Object.keys(replacedParts)[ii]; //key should be "newPart"+random string if a new part is added to aircraft
+
+            //check if valid part
+            const newPart = this.getPart(ctx, newPartID);
+            const historyObj = {
+                tailNumber,
+                hours: 0,
+                onDate: new Date(),
+                offDate: null
+            };
+            //check that it's a valid part to use if not a new part
+            if (newPart.history.length > 0) {
+                const check =
+                    newPart.history[newPart.history.length - 1].offDate;
+                if (check == null) {
+                    throw new Error("invalid part");
+                }
+            }
+
+            //save new part information
+            newPart.history.push(historyObj);
+            await ctx.stub.putState(
+                newPartID.toString(),
+                Buffer.from(JSON.stringify(newPart))
+            );
+
+            //update old part (skip if not replacing a part on aircraft)
+            if (!olderPartID.includes("newPart")) {
+                const oldPart = this.getPart(ctx, oldPartID);
+                oldPart.history[
+                    oldPart.history.length - 1
+                ].offDate = new Date();
+                await ctx.stub.putState(
+                    oldPartID.toString(),
+                    Buffer.from(JSON.stringify(oldPart))
+                );
+            }
+
+            //update aircraft information
+            const index = aircraft.partsList.indexOf(oldPartID); //get index of old part
+            if (index != -1) {
+                aircraft.partsList[index] = newPartID;
+            } else {
+                //push to list if old part is not found
+                aircraft.partsList.push(newPartID);
+            }
+        }
+    }
+
+    async sellAircraft(ctx, tailNumber, company) {
+        const aircraft = await this.getAircraft(ctx, tailNumber);
+        //get current company + add new company
+        const oldCompany = aircraft.owner[aircraft.owner.length - 1].company;
+        aircraft.owner[aircraft.owner.length - 1].soldDate = new Date();
+        aircraft.owner.push({
+            company,
+            purchaseDate: new Date(),
+            soldDate: null
+        });
+
+        //remove maintainer access
+        for (let ii = 0; i < aircraft.maintainers.length; i++) {
+            const username = aircraft.maintainers[ii];
+            const compositeKey = await ctx.stub.createCompositeKey(
+                "maintainer",
+                [oldCompany.toString(), username.toString()]
+            );
+            let userData = await ctx.stub.getState(compositeKey);
+            userData = JSON.parse(userData.toString());
+            userData.aircraft = userData.aircraft.filter(tailNumber);
+            await ctx.stub.putState(
+                compositeKey,
+                Buffer.from(JSON.stringify(userData))
+            );
+        }
+        //remove maintainer array for aircraft
+        aircraft.maintainers = [];
+        await ctx.stub.putState(
+            tailNumber.toString(),
+            Buffer.from(JSON.stringify(aircraft))
+        );
+
+        //add aircraft to new company admin
+        const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
+            "administrator",
+            [company]
+        );
+        const usernameNew = await this.compositeKeyLoop(ctx, compositeIterator, 1);
+        const compositeKey = await ctx.stub.createCompositeKey(
+            "administrator",
+            [company.toString(), usernameNew[0].toString()]
+        );
+        let userData = await ctx.stub.getState(compositeKey);
+        userData = JSON.parse(userData.toString());
+        userData.aircraft.push(tailNumber);
+        console.log(userData);
+        await ctx.stub.putState(
+            compositeKey,
+            Buffer.from(JSON.stringify(userData))
+        );
     }
 }
 
