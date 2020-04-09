@@ -416,6 +416,12 @@ class airlineMRO extends Contract {
                 aircraft.partsList.push(newPartID);
             }
         }
+
+        //push aircraft data
+        await ctx.stub.putState(
+            tailNumber.toString(),
+            Buffer.from(JSON.stringify(aircraft))
+        );
     }
 
     async sellAircraft(ctx, tailNumber, company) {
