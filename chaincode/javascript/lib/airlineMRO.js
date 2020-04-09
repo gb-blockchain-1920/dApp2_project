@@ -154,7 +154,7 @@ class airlineMRO extends Contract {
         let userData = await ctx.stub.getState(compositeKey); //  get the user from the chaincode state
         console.log(JSON.parse(userData.toString()));
         userData = JSON.parse(userData.toString());
-        return user.password == userData.password;
+        return userData;
     }
 
     //register a new aircraft in the blockchain
@@ -213,6 +213,7 @@ class airlineMRO extends Contract {
         );
         let userData = await ctx.stub.getState(compositeKey);
         userData = JSON.parse(userData.toString());
+        console.log(userData);
         userData.aircraft.push(tailNumber);
         console.log(userData);
         await ctx.stub.putState(
