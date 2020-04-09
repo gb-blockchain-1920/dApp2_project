@@ -213,9 +213,8 @@ class airlineMRO extends Contract {
         );
         let userData = await ctx.stub.getState(compositeKey);
         userData = JSON.parse(userData.toString());
-        console.log(userData);
         userData.aircraft.push(tailNumber);
-        console.log(userData);
+        // console.log(userData);
         await ctx.stub.putState(
             compositeKey,
             Buffer.from(JSON.stringify(userData))
@@ -245,7 +244,8 @@ class airlineMRO extends Contract {
             company.toString(),
             username.toString()
         ]);
-        const user = await ctx.stub.getState(compositeKey);
+        let user = await ctx.stub.getState(compositeKey);
+        user = JSON.parse(user.toString());
         user.aircraft.push(tailNumber.toString());
         await ctx.stub.putState(
             compositeKey,
