@@ -348,7 +348,7 @@ class airlineMRO extends Contract {
         const aircraft = this.getAircraft(ctx, tailNumber);
 
         //update part information
-        for (let ii = 0; i < Object.keys(replacedParts).length; i++) {
+        for (let ii = 0; ii < Object.keys(replacedParts).length; ii++) {
             const newPartID = Object.values(replacedParts)[ii];
             const oldPartID = Object.keys(replacedParts)[ii]; //key should be "newPart"+random string if a new part is added to aircraft
 
