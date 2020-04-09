@@ -106,7 +106,7 @@ class airlineMRO extends Contract {
     async registerUser(ctx, user) {
         console.log("======== START : Register User ==========");
         user = JSON.parse(user);
-        // console.log(user, user.type, user.company, user.username);
+        console.log(user, user.type, user.company, user.username);
         const compositeKey = await ctx.stub.createCompositeKey(
             user.type.toString(),
             [user.company.toString(), user.username.toString()]
@@ -135,7 +135,7 @@ class airlineMRO extends Contract {
             console.log(output);
             throw new Error("user exists");
         }
-
+        console.log(compositeKey);
         await ctx.stub.putState(
             compositeKey,
             Buffer.from(JSON.stringify(user))
@@ -146,7 +146,7 @@ class airlineMRO extends Contract {
     //check if passwords match
     async checkUser(ctx, user) {
         user = JSON.parse(user);
-        // console.log(user, user.type, user.company, user.username);
+        console.log(user, user.type, user.company, user.username);
         const compositeKey = await ctx.stub.createCompositeKey(
             user.type.toString(),
             [user.company.toString(), user.username.toString()]

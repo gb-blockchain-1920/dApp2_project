@@ -110,7 +110,7 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 | Function Name        | Input                                                                      | Output              | Restricted                  | Details                                                                                                                                     |
 | -------------------- | -------------------------------------------------------------------------- | ------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `registerUser`       | string `username`, string `password`, string `type`, string `company`      | bool `success`      | Admin + Maintainer          | Creates a user profile for the admin or maintainer, hashed username and password are stored in blockchain, fails if username already exists |
-| `login`              | string `username`, string `password`, string `type`, string `company`      | bool `success`      | Admin + Maintainer          | Checks the username and password against blockchain information, and returns a boolean                                                      |
+| `checkUser`          | string `username`, string `password`, string `type`, string `company`      | bool `success`      | Admin + Maintainer          | Checks the username and password against blockchain information, and returns a boolean                                                      |
 | `registerAircraft`   | string `aircraft`, string `tailNumber`, string `company`                   | string `tailNumber` | Admin                       | Register a new aircraft and create the aircraft object                                                                                      |
 | `assignAircraft`     | string `username`, string `tailNumber`, string `company`                   | bool `success`      | Admin                       | Assign the maintainer to the aircraft so they have access to the data                                                                       |
 | `getAircraft`        | string `tailNumber`                                                        | object `aircraft`   | Admin + Assigned Maintainer | Gets all of the information for a specific aircraft in the format described above                                                           |
@@ -129,7 +129,7 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 | ---------------------------------------------- | ----- | -------------------- | --------------------- |
 | `\` | GET | `getCompanies` | array `companies` |
 | `\login`                                       | POST  | `registerUser`       | bool `success`        |
-| `\login`                                       | GET   | `login`              | string `jsonwebtoken` |
+| `\login`                                       | GET   | `checkUser`          | string `jsonwebtoken` |
 | `\aircraft`                                    | POST  | `registerAircraft`   | object `aircraft`     |
 | `\aircraft`                                    | GET   | `getAircraft`        | object `aircraft`     |
 | `\aircraft`                                    | PATCH | `performMaintenance` | object `aircraft`     |
