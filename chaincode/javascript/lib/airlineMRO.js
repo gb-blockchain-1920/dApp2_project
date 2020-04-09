@@ -396,7 +396,7 @@ class airlineMRO extends Contract {
             );
 
             //update old part (skip if not replacing a part on aircraft)
-            if (!olderPartID.includes("newPart")) {
+            if (!oldPartID.includes("newPart")) {
                 const oldPart = this.getPart(ctx, oldPartID);
                 oldPart.history[
                     oldPart.history.length - 1
