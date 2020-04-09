@@ -318,7 +318,7 @@ class airlineMRO extends Contract {
                 ctx,
                 aircraft.partsList[ii].toString()
             );
-            part.totalHours += hours;
+            part.totalHours += Number(hours);
             part.history[part.history.length - 1].hours += hours;
             await ctx.stub.putState(
                 aircraft.partsList[ii].toString(),
