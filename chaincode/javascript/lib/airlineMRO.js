@@ -362,7 +362,7 @@ class airlineMRO extends Contract {
       console.log("======== START : Replace Parts ==========");
 
         replacedParts = JSON.parse(replacedParts);
-        const aircraft = this.getAircraft(ctx, tailNumber);
+        const aircraft = await this.getAircraft(ctx, tailNumber);
 
         //update part information
         console.log(Object.keys(replacedParts), Object.keys(replacedParts).length);
@@ -371,7 +371,7 @@ class airlineMRO extends Contract {
             const oldPartID = Object.keys(replacedParts)[ii]; //key should be "newPart"+random string if a new part is added to aircraft
 
             //check if valid part
-            const newPart = this.getPart(ctx, newPartID);
+            const newPart = await this.getPart(ctx, newPartID);
             console.log(newPart);
             const historyObj = {
                 tailNumber,
