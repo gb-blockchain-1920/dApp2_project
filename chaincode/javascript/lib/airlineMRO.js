@@ -255,6 +255,7 @@ class airlineMRO extends Contract {
 
     //register a new part in blockchain
     async newPart(ctx, part) {
+        console.log(part);
         part = JSON.parse(part);
         part.totalHours = 0; //make sure new part hours are set to zero
         part.history = [];
@@ -267,7 +268,7 @@ class airlineMRO extends Contract {
         //verify that no part exists at that ID
         let check = await ctx.stub.getState(part.description.id);
         check = check.toString();
-        if (check.length == 0) {
+        if (check.length != 0) {
             throw new Error("part already exists");
         }
 
