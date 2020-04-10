@@ -430,14 +430,22 @@ class airlineMRO extends Contract {
         const aircraft = await this.getAircraft(ctx, tailNumber);
         //get current company + add new company
         const oldCompany = aircraft.owner[aircraft.owner.length - 1].company;
-        console.log(oldCompany);
+        // console.log(oldCompany);
         aircraft.owner[aircraft.owner.length - 1].soldDate = new Date();
         aircraft.owner.push({
             company,
             purchaseDate: new Date(),
             soldDate: null
         });
-        console.log(aircraft);
+        // console.log(aircraft);
+
+        //add admin to list of maintainers (so they also have the aircraft removed)
+        const compositeIteratorOld = await ctx.stub.getStateByPartialCompositeKey(
+            "administrator",
+            [oldCompany]
+        );
+        const usernameOld = await this.compositeKeyLoop(ctx, compositeIterator, 1);
+        aircraft.maintainers.push(usernameOld)
 
         //remove maintainer access
         for (let ii = 0; ii < aircraft.maintainers.length; ii++) {
@@ -448,8 +456,7 @@ class airlineMRO extends Contract {
             );
             let userData = await ctx.stub.getState(compositeKey);
             userData = JSON.parse(userData.toString());
-            userData.aircraft = userData.aircraft.filter(tailNumber);
-            console.log(userData);
+            userData.aircraft = userData.aircraft.filter(num => num != tailNumber);
             await ctx.stub.putState(
                 compositeKey,
                 Buffer.from(JSON.stringify(userData))
@@ -457,7 +464,6 @@ class airlineMRO extends Contract {
         }
         //remove maintainer array for aircraft
         aircraft.maintainers = [];
-        console.log(aircraft);
         await ctx.stub.putState(
             tailNumber,
             Buffer.from(JSON.stringify(aircraft))
@@ -476,7 +482,7 @@ class airlineMRO extends Contract {
         let admin = await ctx.stub.getState(compositeKey);
         admin = JSON.parse(admin.toString());
         admin.aircraft.push(tailNumber);
-        console.log(admin);
+        // console.log(admin);
         await ctx.stub.putState(
             compositeKey,
             Buffer.from(JSON.stringify(admin))
