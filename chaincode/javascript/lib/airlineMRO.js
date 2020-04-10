@@ -444,7 +444,7 @@ class airlineMRO extends Contract {
             "administrator",
             [oldCompany]
         );
-        const usernameOld = await this.compositeKeyLoop(ctx, compositeIterator, 1);
+        const usernameOld = await this.compositeKeyLoop(ctx, compositeIteratorOld, 1);
         aircraft.maintainers.push(usernameOld)
 
         //remove maintainer access
