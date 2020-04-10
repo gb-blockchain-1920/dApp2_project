@@ -59,7 +59,7 @@ class airlineMRO extends Contract {
     // }
 
     async getCompanies(ctx) {
-      console.log("======== START : Get Companies ==========");
+        console.log("======== START : Get Companies ==========");
 
         const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
             "administrator",
@@ -69,7 +69,7 @@ class airlineMRO extends Contract {
     }
 
     async getMaintainers(ctx, company) {
-      console.log("======== START : Get Maintainers ==========");
+        console.log("======== START : Get Maintainers ==========");
 
         const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
             "maintainer",
@@ -228,7 +228,7 @@ class airlineMRO extends Contract {
 
     //get aircraft information
     async getAircraft(ctx, tailNumber) {
-      console.log("======== START : Get Aircraft ==========");
+        console.log("======== START : Get Aircraft ==========");
 
         const data = await ctx.stub.getState(tailNumber);
         return JSON.parse(data.toString());
@@ -236,7 +236,7 @@ class airlineMRO extends Contract {
 
     //assign a maintainer to an aircraft
     async assignAircraft(ctx, username, tailNumber, company) {
-      console.log("======== START : Assign Aircraft ==========");
+        console.log("======== START : Assign Aircraft ==========");
 
         //add maintainer to aircraft
         const aircraftData = await this.getAircraft(ctx, tailNumber);
@@ -262,7 +262,7 @@ class airlineMRO extends Contract {
 
     //register a new part in blockchain
     async newPart(ctx, part) {
-      console.log("======== START : New Part ==========");
+        console.log("======== START : New Part ==========");
 
         console.log(part);
         part = JSON.parse(part);
@@ -290,7 +290,7 @@ class airlineMRO extends Contract {
 
     //get part information
     async getPart(ctx, partID) {
-      console.log("======== START : Get Part ==========");
+        console.log("======== START : Get Part ==========");
 
         const data = await ctx.stub.getState(partID);
         return JSON.parse(data.toString());
@@ -298,7 +298,7 @@ class airlineMRO extends Contract {
 
     //update the flight hours for an aircraft and the associated parts
     async updateFlightHours(ctx, tailNumber, hours) {
-      console.log("======== START : Update Flight Hours ==========");
+        console.log("======== START : Update Flight Hours ==========");
 
         //update aircraft hours
         const aircraft = await this.getAircraft(ctx, tailNumber);
@@ -328,7 +328,7 @@ class airlineMRO extends Contract {
     }
 
     async performMaintenance(ctx, tailNumber, type, notes, replacedParts) {
-      console.log("======== START : Performance Maintenance ==========");
+        console.log("======== START : Performance Maintenance ==========");
 
         //get aircraft and update maintenanceReports
         const aircraft = await this.getAircraft(ctx, tailNumber);
@@ -359,13 +359,16 @@ class airlineMRO extends Contract {
     }
 
     async replaceParts(ctx, tailNumber, replacedParts) {
-      console.log("======== START : Replace Parts ==========");
+        console.log("======== START : Replace Parts ==========");
 
         replacedParts = JSON.parse(replacedParts);
         const aircraft = await this.getAircraft(ctx, tailNumber);
 
         //update part information
-        console.log(Object.keys(replacedParts), Object.keys(replacedParts).length);
+        console.log(
+            Object.keys(replacedParts),
+            Object.keys(replacedParts).length
+        );
         for (let ii = 0; ii < Object.keys(replacedParts).length; ii++) {
             const newPartID = Object.values(replacedParts)[ii];
             const oldPartID = Object.keys(replacedParts)[ii]; //key should be "newPart"+random string if a new part is added to aircraft
@@ -425,7 +428,7 @@ class airlineMRO extends Contract {
     }
 
     async sellAircraft(ctx, tailNumber, company) {
-      console.log("======== START : Sell Aircraft ==========");
+        console.log("======== START : Sell Aircraft ==========");
 
         const aircraft = await this.getAircraft(ctx, tailNumber);
         //get current company + add new company
@@ -444,19 +447,29 @@ class airlineMRO extends Contract {
             "administrator",
             [oldCompany]
         );
-        const usernameOld = await this.compositeKeyLoop(ctx, compositeIteratorOld, 1);
-        aircraft.maintainers.push(usernameOld)
+        const usernameOld = await this.compositeKeyLoop(
+            ctx,
+            compositeIteratorOld,
+            1
+        );
+        aircraft.maintainers.push(usernameOld);
 
         //remove maintainer access
         for (let ii = 0; ii < aircraft.maintainers.length; ii++) {
             const username = aircraft.maintainers[ii];
+            const userType = //set usertype to maintainer except for last one (pushed admin earlier)
+                aircraft.maintainers.length - 1 == ii
+                    ? "administrator"
+                    : "maintainer";
             const compositeKey = await ctx.stub.createCompositeKey(
-                "maintainer",
+                userType,
                 [oldCompany.toString(), username.toString()]
             );
             let userData = await ctx.stub.getState(compositeKey);
             userData = JSON.parse(userData.toString());
-            userData.aircraft = userData.aircraft.filter(num => num != tailNumber);
+            userData.aircraft = userData.aircraft.filter(
+                num => num != tailNumber
+            );
             await ctx.stub.putState(
                 compositeKey,
                 Buffer.from(JSON.stringify(userData))
@@ -464,6 +477,7 @@ class airlineMRO extends Contract {
         }
         //remove maintainer array for aircraft
         aircraft.maintainers = [];
+        console.log(aircraft);
         await ctx.stub.putState(
             tailNumber,
             Buffer.from(JSON.stringify(aircraft))
@@ -474,7 +488,11 @@ class airlineMRO extends Contract {
             "administrator",
             [company]
         );
-        const usernameNew = await this.compositeKeyLoop(ctx, compositeIterator, 1);
+        const usernameNew = await this.compositeKeyLoop(
+            ctx,
+            compositeIterator,
+            1
+        );
         const compositeKey = await ctx.stub.createCompositeKey(
             "administrator",
             [company.toString(), usernameNew[0].toString()]
@@ -482,7 +500,7 @@ class airlineMRO extends Contract {
         let admin = await ctx.stub.getState(compositeKey);
         admin = JSON.parse(admin.toString());
         admin.aircraft.push(tailNumber);
-        // console.log(admin);
+        console.log(admin);
         await ctx.stub.putState(
             compositeKey,
             Buffer.from(JSON.stringify(admin))
