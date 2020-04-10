@@ -455,7 +455,7 @@ class airlineMRO extends Contract {
         //remove maintainer array for aircraft
         aircraft.maintainers = [];
         await ctx.stub.putState(
-            tailNumber.toString(),
+            tailNumber,
             Buffer.from(JSON.stringify(aircraft))
         );
 
