@@ -438,7 +438,7 @@ class airlineMRO extends Contract {
         });
 
         //remove maintainer access
-        for (let ii = 0; i < aircraft.maintainers.length; i++) {
+        for (let ii = 0; ii < aircraft.maintainers.length; ii++) {
             const username = aircraft.maintainers[ii];
             const compositeKey = await ctx.stub.createCompositeKey(
                 "maintainer",
