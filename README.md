@@ -158,3 +158,4 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 - [Maintenance checks](https://en.wikipedia.org/wiki/Aircraft_maintenance_checks)
 - [Installation instructions for Hyperledger](./documentation/chaincodeInstallation.md)
 - [Sample chaincode calls](./chaincode/javascript/commands.md)
+- [Github pages + React](https://github.com/gitname/react-gh-pages)
