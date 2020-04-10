@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 
@@ -27,7 +27,7 @@ const darkTheme = createMuiTheme({
 
 ReactDOM.render(
   <ThemeProvider theme={darkTheme}>
-    <Router>
+    <Router basename="/">
       <App />
     </Router>
   </ThemeProvider>,
