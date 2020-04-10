@@ -430,12 +430,14 @@ class airlineMRO extends Contract {
         const aircraft = await this.getAircraft(ctx, tailNumber);
         //get current company + add new company
         const oldCompany = aircraft.owner[aircraft.owner.length - 1].company;
+        console.log(oldCompany);
         aircraft.owner[aircraft.owner.length - 1].soldDate = new Date();
         aircraft.owner.push({
             company,
             purchaseDate: new Date(),
             soldDate: null
         });
+        console.log(aircraft);
 
         //remove maintainer access
         for (let ii = 0; ii < aircraft.maintainers.length; ii++) {
