@@ -447,6 +447,7 @@ class airlineMRO extends Contract {
             let userData = await ctx.stub.getState(compositeKey);
             userData = JSON.parse(userData.toString());
             userData.aircraft = userData.aircraft.filter(tailNumber);
+            console.log(userData);
             await ctx.stub.putState(
                 compositeKey,
                 Buffer.from(JSON.stringify(userData))
@@ -454,6 +455,7 @@ class airlineMRO extends Contract {
         }
         //remove maintainer array for aircraft
         aircraft.maintainers = [];
+        console.log(aircraft);
         await ctx.stub.putState(
             tailNumber,
             Buffer.from(JSON.stringify(aircraft))
@@ -469,13 +471,13 @@ class airlineMRO extends Contract {
             "administrator",
             [company.toString(), usernameNew[0].toString()]
         );
-        let userData = await ctx.stub.getState(compositeKey);
-        userData = JSON.parse(userData.toString());
-        userData.aircraft.push(tailNumber);
-        console.log(userData);
+        let admin = await ctx.stub.getState(compositeKey);
+        admin = JSON.parse(admin.toString());
+        admin.aircraft.push(tailNumber);
+        console.log(admin);
         await ctx.stub.putState(
             compositeKey,
-            Buffer.from(JSON.stringify(userData))
+            Buffer.from(JSON.stringify(admin))
         );
     }
 }
