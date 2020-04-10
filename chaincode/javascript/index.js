@@ -4,7 +4,7 @@
 
 'use strict';
 
-const eKYC = require('./lib/eKYC');
+const airlineMRO = require('./lib/airlineMRO');
 
-module.exports.eKYC = eKYC;
-module.exports.contracts = [ eKYC ];
+module.exports.airlineMRO = airlineMRO;
+module.exports.contracts = [ airlineMRO ];
