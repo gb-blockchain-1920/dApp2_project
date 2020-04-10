@@ -5,7 +5,6 @@ Aaron Lu - 101278524
 
 [Hyperledger Fabric + Aircraft MRO Pitch Presentation](https://docs.google.com/presentation/d/1wEVzxKrAMhcqZpjzRCup2dHBgFmt6gY-MDXYOtnlCzk/edit?usp=sharing)
 
----
 
 ## Description
 
@@ -17,7 +16,7 @@ The proposed solution hopes to accomplish the most paradoxical problem in supply
 
 ### Background
 
-For a typical airline company like Air Canada, Delta, KLM, etc, an aircraft follows the cycle shown in the figure below:
+For a typical airline company like Air Canada, Delta, KLM, etc, an aircraft follows the cycle shown in the figure below:  
 ![](./documentation/lifeCycle.png)  
 The aircraft is delivered and the cycle of maintenance and flights occur until it is determined to be sold or scrapped. During MRO procedures, parts can be supplied as brand new from external suppliers or they may be recovered from a scrapped aircraft. These parts are still viable for use because they have not exceeded their flight hours threshold.
 
@@ -35,7 +34,6 @@ However, IoT devices often provide massive amounts of information and analyzing 
 
 ![](./documentation/timeline.png)
 
----
 
 ## Technical Details (PoC)
 
@@ -65,6 +63,10 @@ The following diagram shows the 5 different types of interactions for the PoC.
 _Note: IoT devices and predictive maintenance are not implemented in PoC_
 
 ![](./documentation/sequenceDiagram.png)
+
+Additional pieces of modeling can be found in the `documentation` folder:
+- [User stories](./documentation/userStories.md)
+- [Class diagram](./documentation/classDiagram.png)
 
 ### Data/Parameters
 
@@ -142,15 +144,17 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 
 ## Planning/Goals
 
-- [ ] Hyperledger Fabric (maintenance schedule + parts provenance)
+- [x] Hyperledger Fabric (maintenance schedule + parts provenance)
 - [ ] Express API
 - [ ] Deployed React front-end
-- [ ] Mobile friendly site
+- [x] Mobile friendly site
 - [ ] Status indicator for front-end on connecting to API (see if it's still active)
 - [ ] Test cases for chaincode & API
 - [ ] CI/CD
 
 ### Resources
 
-- https://www.icao.int/safety/airnavigation/OPS/airworthiness/Pages/EAMR.aspx
-- https://en.wikipedia.org/wiki/Aircraft_maintenance_checks
+- [Maintenance record standards](https://www.icao.int/safety/airnavigation/OPS/airworthiness/Pages/EAMR.aspx)
+- [Maintenance checks](https://en.wikipedia.org/wiki/Aircraft_maintenance_checks)
+- [Installation instructions for Hyperledger](./documentation/chaincodeInstallation.md)
+- [Sample chaincode calls](./chaincode/javascript/commands.md)
