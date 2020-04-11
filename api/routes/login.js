@@ -9,6 +9,7 @@ router.get("/", function(req, res) {
 
 router.post("/", async function(req, res) {
   //validate user object
+  console.log(req, req.body);
   if (
     Object.keys(req.body).length !== 4 ||
     !req.body.username ||
