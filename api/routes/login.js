@@ -9,7 +9,7 @@ router.get("/", function(req, res) {
 
 router.post("/", async function(req, res) {
   //validate user object
-  console.log(req, req.body);
+  console.log(req.body);
   if (
     Object.keys(req.body).length !== 4 ||
     !req.body.username ||
@@ -28,7 +28,7 @@ router.post("/", async function(req, res) {
   try {
     const response = await hyperledger.query("mychannel", "airlineMRO", [
       "registerUser",
-      req.body
+      ...Object.values(req.body)
     ]);
     res.send(response);
   } catch (e) {
