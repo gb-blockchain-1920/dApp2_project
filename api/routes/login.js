@@ -23,7 +23,7 @@ router.get("/", async function(req, res) {
 
   try {
      const user = await hyperledger.query("mychannel", "airlineMRO", [
-      "registerUser",
+      "checkUser",
       JSON.stringify(req.body)
     ]);
 
