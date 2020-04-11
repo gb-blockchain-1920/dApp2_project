@@ -33,24 +33,19 @@ cd ../fabcar
 chmod 777 start_ekyc.sh
 ./start_ekyc.sh
 ```
-<!-- Get the API code from the repository
-```
-cd
-git clone https://github.com/aalu1418/dApp1_project
-```
+
+#### API Setup
 Copy the `connection-org1.json` from the `fabric-samples/first-network` folder to the `api\config` folder
 ```
-cd ~/dApp1_project/api
+cd ~/dApp2_project/api
 mkdir config
-cp ~/fabric-samples/first-network/connection-org1.json ~/dApp1_project/api/config/connection-org1.json
+cp ~/fabric-samples/first-network/connection-org1.json ~/dApp2_project/api/config/connection-org1.json
 ```
 Install packages, enroll admin and user, and start server.
 ```
-npm install
+yarn
 node enrollAdmin.js
 node registerUser.js
-npm start
+yarn start
 ```
 This will start the express server at `http://localhost:3000`. If you are in GCP, it will start the server at `http://<your GCP external IP>:3000`. Please note that you have to enable the firewall rules to allow port 3000 to be exposed in your GCP Compute Engine.
-
-Then from your local machine, deploy the code in the `frontend` folder using `npm start`. -->
