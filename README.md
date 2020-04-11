@@ -142,17 +142,28 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 | `\admin`                                       | PATCH | `sellAircraft`       | bool `success`        |
 | `\admin`                                       | GET   | `getMaintainers`     | array `maintainers`   |
 
-## Planning/Goals
+## Goals + Tasks
 
 - [x] Hyperledger Fabric (maintenance schedule + parts provenance)
+  - [x] Complete logic
+  - [ ] Storing more parameters - if necessary
 - [ ] Express API
-- [ ] Deployed React front-end
-- [x] Mobile friendly site
-- [ ] Status indicator for front-end on connecting to API (see if it's still active)
+  - [x] basic API
+  - [ ] user validation using JWT
+- [ ] React front-end
+  - [x] Basic framework
+  - [x] Mobile friendly site
+  - [ ] Completed site
+  - [ ] Status indicator for front-end on connecting to API (see if it's still active)
 - [ ] Test cases for chaincode & API
 - [ ] CI/CD
+  - [x] for site deployment
+  - [ ] for test cases
 
-### Resources
+## Notes
+- Validation with JSON web tokens is not a good security practice. JWT was used for ease of implementation for PoC.
+
+## Resources
 
 - [Maintenance record standards](https://www.icao.int/safety/airnavigation/OPS/airworthiness/Pages/EAMR.aspx)
 - [Maintenance checks](https://en.wikipedia.org/wiki/Aircraft_maintenance_checks)
