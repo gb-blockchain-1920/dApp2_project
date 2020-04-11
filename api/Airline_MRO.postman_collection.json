@@ -1,0 +1,451 @@
+{
+	"info": {
+		"_postman_id": "86b2d4fc-92e3-4d2d-92a1-02a960e803d7",
+		"name": "Airline_MRO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://35.193.103.180:3000/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://35.193.103.180:3000/",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/login",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"test\",\n\"password\":\"something\",\n\"type\":\"administrator\",\n\"company\":\"delta\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/login",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"test\",\n\"password\":\"something\",\n\"type\":\"administrator\",\n\"company\":\"delta\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/login",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/aircraft",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"tailNumber\": \"BYFN-SH\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/aircraft",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"aircraft"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/aircraft",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"aircraft\":\"Boeing 787-10\",\n\"tailNumber\": \"BYFN-SH\",\n\"company\":\"delta\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/aircraft",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"aircraft"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/aircraft",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"tailNumber\": \"BYFN-SH\",\n\"type\": \"A\",\n\"notes\":\"nominal inspection complete\",\n\"replacedParts\": {\"newPart\" : \"testPart\"}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/aircraft",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"aircraft"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/part",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"description\": {\"id\": \"testPart\", \"name\": \"important part for plane\"},\n\"maximumHours\": 1200\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/part",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"part"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/part",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"partID\": \"testPart\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/part",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"part"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/flight",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"tailNumber\": \"BYFN-SH\",\n\"hours\":10}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/flight",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"flight"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/admin",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"company\":\"delta\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/admin",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/admin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"bob\",\n\"tailNumber\": \"BYFN-SH\",\n\"company\":\"delta\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/admin",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://35.193.103.180:3000/admin",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"tailNumber\": \"BYFN-SH\",\n\"company\":\"delta\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://35.193.103.180:3000/admin",
+					"protocol": "https",
+					"host": [
+						"35",
+						"193",
+						"103",
+						"180"
+					],
+					"port": "3000",
+					"path": [
+						"admin"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
