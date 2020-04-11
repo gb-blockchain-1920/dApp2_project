@@ -26,11 +26,11 @@ router.post("/", async function(req, res) {
   req.body.company = req.body.company.toLowerCase();
 
   try {
-    const response = await hyperledger.query("mychannel", "airlineMRO", [
+     await hyperledger.invoke("mychannel", "airlineMRO", [
       "registerUser",
       JSON.stringify(req.body)
     ]);
-    res.send(response);
+    res.send(200);
   } catch (e) {
     console.log(e);
     res.sendStatus(500)
