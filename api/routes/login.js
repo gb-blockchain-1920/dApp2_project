@@ -4,7 +4,40 @@ const router = express.Router();
 const crypto = require("../scripts/hash");
 
 router.get("/", function(req, res) {
-  res.send("checkUser endpoint");
+  //validate user object
+  console.log(req.body);
+  if (
+    Object.keys(req.body).length !== 4 ||
+    !req.body.username ||
+    !req.body.password ||
+    !req.body.type ||
+    !req.body.company
+  ) {
+    return res.sendStatus(400);
+  }
+
+  // pre-processing
+  req.body.password = crypto.hash(req.body.password); //hash password for storage
+  req.body.type = req.body.type.toLowerCase();
+  req.body.company = req.body.company.toLowerCase();
+
+  try {
+     const user = await hyperledger.query("mychannel", "airlineMRO", [
+      "registerUser",
+      JSON.stringify(req.body)
+    ]);
+    
+    //return user object if passwords match
+    if (user.password == req.body.password) {
+      res.send(user);
+    } else {
+      res.send(false)
+    }
+
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500)
+  }
 });
 
 router.post("/", async function(req, res) {
@@ -30,7 +63,7 @@ router.post("/", async function(req, res) {
       "registerUser",
       JSON.stringify(req.body)
     ]);
-    res.send(200);
+    res.sendStatus(200);
   } catch (e) {
     console.log(e);
     res.sendStatus(500)
