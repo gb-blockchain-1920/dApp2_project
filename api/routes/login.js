@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const crypto = require("../scripts/hash");
 
-router.get("/", function(req, res) {
+router.get("/", async function(req, res) {
   //validate user object
   console.log(req.body);
   if (
@@ -26,7 +26,7 @@ router.get("/", function(req, res) {
       "registerUser",
       JSON.stringify(req.body)
     ]);
-    
+
     //return user object if passwords match
     if (user.password == req.body.password) {
       res.send(user);
