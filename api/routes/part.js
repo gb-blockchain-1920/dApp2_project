@@ -9,11 +9,11 @@ router.get("/", async function(req, res) {
   }
 
   try {
-    await hyperledger.invoke("mychannel", "airlineMRO", [
+    const part = await hyperledger.query("mychannel", "airlineMRO", [
       "getPart",
       req.body.partID.toString()
     ]);
-    res.sendStatus(200);
+    res.send(part);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
