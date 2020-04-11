@@ -1,9 +1,9 @@
-var express = require("express");
-var router = express.Router();
-var hyperledger = require("../scripts/hyperledger");
+const express = require("express");
+const router = express.Router();
+const hyperledger = require("../scripts/hyperledger");
 
 router.get("/", async function(req, res) {
-  const companies = await hyperledger.query("mychannel", "airlineMRO", [
+  let companies = await hyperledger.query("mychannel", "airlineMRO", [
     "getCompanies"
   ]);
   console.log(companies);
