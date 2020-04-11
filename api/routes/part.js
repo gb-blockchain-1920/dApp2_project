@@ -11,7 +11,7 @@ router.get("/", async function(req, res) {
   try {
     const part = await hyperledger.query("mychannel", "airlineMRO", [
       "getPart",
-      req.body.partID.toString()
+      req.body.partID
     ]);
     res.send(part);
   } catch (e) {
