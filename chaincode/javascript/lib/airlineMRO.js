@@ -336,7 +336,7 @@ class airlineMRO extends Contract {
             date: new Date(),
             type,
             notes,
-            partsReplaced: replacedParts
+            partsReplaced: JSON.stringify(replacedParts)
         });
 
         //update maintenanceSchedule if necessary
