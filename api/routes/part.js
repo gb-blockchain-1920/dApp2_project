@@ -23,7 +23,7 @@ router.get("/", async function(req, res) {
 router.post("/", async function(req, res) {
   console.log(req.body);
   if (
-    Object.keys(req.body).length >= 2 ||
+    Object.keys(req.body).length < 2 ||
     !req.body.description.id ||
     !req.body.description.name ||
     !req.body.maximumHours
