@@ -37,7 +37,7 @@ router.post("/", async function(req, res) {
       req.body.tailNumber,
       req.body.company
     ]);
-    res.send(200);
+    res.sendStatus(200);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -59,7 +59,7 @@ router.patch("/", async function(req, res) {
       req.body.tailNumber,
       req.body.company
     ]);
-    res.send(200);
+    res.sendStatus(200);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
