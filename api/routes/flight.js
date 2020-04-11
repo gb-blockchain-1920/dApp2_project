@@ -9,13 +9,18 @@ router.post("/", async function(req, res) {
   ) {
     return res.sendStatus(400);
   }
-  let companies = await hyperledger.invoke("mychannel", "airlineMRO", [
-    "updateFlightHours",
-    req.body.tailNumber,
-    req.body.hours
-  ]);
-  console.log(companies);
-  res.send(companies);
+
+  try {
+    await hyperledger.invoke("mychannel", "airlineMRO", [
+      "updateFlightHours",
+      req.body.tailNumber,
+      req.body.hours.toString()
+    ]);
+    res.sendStatus(200);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500)
+  }
 });
 
 module.exports = router;
