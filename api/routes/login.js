@@ -28,10 +28,7 @@ router.post("/", async function(req, res) {
   try {
     const response = await hyperledger.query("mychannel", "airlineMRO", [
       "registerUser",
-      req.body.username,
-      req.body.password,
-      req.body.type,
-      req.body.company
+      JSON.stringify(req.body)
     ]);
     res.send(response);
   } catch (e) {
