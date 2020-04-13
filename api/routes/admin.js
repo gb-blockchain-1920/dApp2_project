@@ -4,15 +4,27 @@ const hyperledger = require("../scripts/hyperledger");
 const token = require("../scripts/token");
 
 router.get("/", async function(req, res) {
-  console.log(req.body);
-  if (Object.keys(req.body).length !== 1 || !req.body.company) {
-    return res.sendStatus(400);
+  //validate if administrator or not
+  try {
+    const tokenData = await token.decode(req.headers.authorization);
+    //if not authorized administrator
+    if (tokenData.type !== "administrator") {
+      return res.sendStatus(401);
+    }
+  } catch (e) {
+    console.log(e);
+    return res.sendStatus(401);
   }
+
+  // console.log(req.body);
+  // if (Object.keys(req.body).length !== 1 || !req.body.company) {
+  //   return res.sendStatus(400);
+  // }
 
   try {
     const maintainers = await hyperledger.query("mychannel", "airlineMRO", [
       "getMaintainers",
-      req.body.company
+      tokenData.company //get company from token data
     ]);
     res.send(maintainers);
   } catch (e) {
@@ -22,6 +34,21 @@ router.get("/", async function(req, res) {
 });
 
 router.post("/", async function(req, res) {
+  //validate if administrator or not
+  try {
+    const tokenData = await token.decode(req.headers.authorization);
+    //if not authorized administrator
+    if (
+      tokenData.type !== "administrator" ||
+      req.body.company !== tokenData.company
+    ) {
+      return res.sendStatus(401);
+    }
+  } catch (e) {
+    console.log(e);
+    return res.sendStatus(401);
+  }
+
   if (
     Object.keys(req.body).length !== 3 ||
     !req.body.username ||
@@ -46,10 +73,23 @@ router.post("/", async function(req, res) {
 });
 
 router.patch("/", async function(req, res) {
+  //validate if administrator or not
+  try {
+    const tokenData = await token.decode(req.headers.authorization);
+    //if not authorized administrator
+    if (tokenData.type !== "administrator") {
+      return res.sendStatus(401)
+    }
+  } catch (e) {
+    console.log(e);
+    return res.sendStatus(401);
+  }
+
   if (
     Object.keys(req.body).length !== 2 ||
     !req.body.company ||
-    !req.body.tailNumber
+    !req.body.tailNumber ||
+    req.body.company == tokenData.company //cannot sell aircraft to self
   ) {
     return res.sendStatus(400);
   }
