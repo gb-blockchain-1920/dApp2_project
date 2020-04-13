@@ -14,7 +14,7 @@ export const registerUser = async params => {
     headers: {
       "Content-Type": "application/json"
     },
-    body: params
+    body: JSON.stringify(params)
   });
   const data = await res.json();
   return data;

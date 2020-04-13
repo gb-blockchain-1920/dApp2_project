@@ -6,7 +6,15 @@ const token = require("../scripts/token");
 
 router.get("/", async function(req, res) {
   //validate user object
-  console.log(req.body);
+  console.log(
+    typeof req.body,
+    req.body,
+    Object.keys(req.body).length !== 4,
+    !req.body.username,
+    !req.body.password,
+    !req.body.type,
+    !req.body.company
+  );
   if (
     Object.keys(req.body).length !== 4 ||
     !req.body.username ||
@@ -44,7 +52,15 @@ router.get("/", async function(req, res) {
 
 router.post("/", async function(req, res) {
   //validate user object
-  console.log(req.body);
+  console.log(
+    typeof req.body,
+    req.body,
+    Object.keys(req.body).length !== 4,
+    !req.body.username,
+    !req.body.password,
+    !req.body.type,
+    !req.body.company
+  );
   if (
     Object.keys(req.body).length !== 4 ||
     !req.body.username ||
