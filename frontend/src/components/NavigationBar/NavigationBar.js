@@ -10,8 +10,16 @@ import {
 import FlightTakeoffIcon from "@material-ui/icons/FlightTakeoff";
 import RssFeedIcon from "@material-ui/icons/RssFeed";
 import "./NavigationBar.css";
+import { useHistory, useLocation } from "react-router-dom";
 
-export const NavigationBar = ({connected}) => {
+export const NavigationBar = ({ connected }) => {
+  const history = useHistory();
+  const location = useLocation();
+  const logout = () => {
+    history.push("/");
+    console.log("logout callback");
+  };
+
   return (
     <AppBar position="sticky">
       <Toolbar>
@@ -23,7 +31,11 @@ export const NavigationBar = ({connected}) => {
           Airline MRO
         </Typography>
         <Box px={2}>
-          <Button color="inherit">Login</Button>
+          {location.pathname === "/aircraft" && (
+            <Button color="inherit" onClick={logout}>
+              Logout
+            </Button>
+          )}
         </Box>
         <Tooltip title={connected ? "Network Connected" : "Not Connected"}>
           <RssFeedIcon color={connected ? "inherit" : "secondary"} />

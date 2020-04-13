@@ -14,14 +14,24 @@ export const LoginCard = ({
   onClick,
   disabled,
   buttonText,
+  toggleClick,
   children
 }) => {
   return (
     <Box mt={6} mx={5} className="loginCard-container">
       <Card raised={true} className="loginCard-card">
         <CardHeader title={heading} className="loginCard-center" />
-        <CardContent className="loginCard-content loginCard-center">{children}</CardContent>
+        <CardContent className="loginCard-content loginCard-center">
+          {children}
+        </CardContent>
         <CardActions className="loginCard-center">
+          <Box mb={1}>
+            <Button onClick={toggleClick}>
+              {heading === "User Login"
+                ? "Register New User"
+                : "Login Existing User"}
+            </Button>
+          </Box>
           <Button
             fullWidth={true}
             variant="contained"
