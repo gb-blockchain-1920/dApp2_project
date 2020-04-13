@@ -5,8 +5,23 @@ const token = require("../scripts/token");
 
 router.post("/", async function(req, res) {
   //validate user
-  const tokenData = await token.decode(req.headers.authorization);
-  console.log(tokenData);
+  try {
+    const tokenData = await token.decode(req.headers.authorization);
+    console.log(tokenData);
+    const user = await hyperledger.query("mychannel", "airlineMRO", [
+      "checkUser",
+      JSON.stringify({type: "maintainer", username: tokenData.username, company: tokenData.company})
+    ]);
+
+    //if not authorized for the aircraft throw error
+    if (!user.aircraft.includes(req.body.tailNumber)) {
+      return res.sendStatus(401)
+    }
+
+  } catch (e) {
+    console.log(e);
+    return res.sendStatus(401);
+  }
 
   //validate data
   if (
