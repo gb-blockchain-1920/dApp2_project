@@ -125,9 +125,9 @@ class airlineMRO extends Contract {
 
         //check if admin for company already exists or if user already exists
         let output;
-        if (user.type.toString() == "maintainer") {
+        if (user.type.toString() == "administrator") {
             const compositeIterator = await ctx.stub.getStateByPartialCompositeKey(
-                "maintainer",
+                "administrator",
                 [user.company.toString()]
             );
             output = await this.compositeKeyLoop(ctx, compositeIterator, 1);

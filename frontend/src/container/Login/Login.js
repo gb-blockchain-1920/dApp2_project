@@ -8,12 +8,12 @@ import { registerUser } from "../../scripts/hyperledger.js"
 
 export const Login = ({ companies }) => {
   const history = useHistory();
-  const roles = ["Administrator", "Maintainer"];
+  const types = ["Administrator", "Maintainer"];
   const [register, setRegister] = React.useState(false);
   const [userPass, setUserPass] = React.useState({
     username: "",
     password: "",
-    role: "",
+    type: "",
     company: ""
   });
 
@@ -21,7 +21,7 @@ export const Login = ({ companies }) => {
     username: "",
     password: "",
     verified: "",
-    role: "",
+    type: "",
     company: ""
   });
   const [validate, setValidate] = React.useState(false);
@@ -109,11 +109,11 @@ export const Login = ({ companies }) => {
             helperText={validate ? "passwords do not match" : ""}
           />
           <AutoCompleteText
-            options={roles}
+            options={types}
             optionLabel={wordCapitalization}
             label="Role"
             onInputChange={event => {
-              autocompleteOnChange(event, setNewUser, "role", roles);
+              autocompleteOnChange(event, setNewUser, "type", types);
             }}
           />
           <AutoCompleteText
@@ -151,11 +151,11 @@ export const Login = ({ companies }) => {
             id="password"
           />
           <AutoCompleteText
-            options={roles}
+            options={types}
             optionLabel={wordCapitalization}
             label="Role"
             onInputChange={event => {
-              autocompleteOnChange(event, setUserPass, "role", roles);
+              autocompleteOnChange(event, setUserPass, "type", types);
             }}
           />
           <AutoCompleteText
@@ -163,7 +163,7 @@ export const Login = ({ companies }) => {
             optionLabel={wordCapitalization}
             label="Company"
             onInputChange={event => {
-              autocompleteOnChange(event, setUserPass, "company", roles);
+              autocompleteOnChange(event, setUserPass, "company", types);
             }}
           />
         </LoginCard>
