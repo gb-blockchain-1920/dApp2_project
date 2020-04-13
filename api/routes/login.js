@@ -32,7 +32,7 @@ router.get("/", async function(req, res) {
 
     //return user object if passwords match
     if (user.password == req.body.password) {
-      res.send({user, jwtToken});
+      res.send({ user, jwtToken });
     } else {
       res.send(false);
     }
