@@ -5,8 +5,9 @@ const token = require("../scripts/token");
 
 router.get("/", async function(req, res) {
   //validate if administrator or not
+  let tokenData;
   try {
-    const tokenData = await token.decode(req.headers.authorization);
+    tokenData = await token.decode(req.headers.authorization);
     //if not authorized administrator
     if (tokenData.type !== "administrator") {
       return res.sendStatus(401);
@@ -74,8 +75,9 @@ router.post("/", async function(req, res) {
 
 router.patch("/", async function(req, res) {
   //validate if administrator or not
+  let tokenData;
   try {
-    const tokenData = await token.decode(req.headers.authorization);
+    tokenData = await token.decode(req.headers.authorization);
     //if not authorized administrator
     if (tokenData.type !== "administrator") {
       return res.sendStatus(401)
