@@ -13,11 +13,10 @@ router.post("/", async function(req, res) {
       JSON.stringify({type: "maintainer", username: tokenData.username, company: tokenData.company})
     ]);
 
-    //if not authorized for the aircraft throw error
+    //if not authorized maintainer for the aircraft throw error
     if (!user.aircraft.includes(req.body.tailNumber)) {
       return res.sendStatus(401)
     }
-
   } catch (e) {
     console.log(e);
     return res.sendStatus(401);
