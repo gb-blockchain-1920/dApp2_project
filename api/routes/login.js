@@ -2,6 +2,7 @@ const hyperledger = require("../scripts/hyperledger");
 const express = require("express");
 const router = express.Router();
 const crypto = require("../scripts/hash");
+const token = require("../scripts/token");
 
 router.get("/", async function(req, res) {
   //validate user object
@@ -22,21 +23,22 @@ router.get("/", async function(req, res) {
   req.body.company = req.body.company.toLowerCase();
 
   try {
-     const user = await hyperledger.query("mychannel", "airlineMRO", [
+    const jwtToken = await token.encode(req.body);
+
+    const user = await hyperledger.query("mychannel", "airlineMRO", [
       "checkUser",
       JSON.stringify(req.body)
     ]);
 
     //return user object if passwords match
     if (user.password == req.body.password) {
-      res.send(user);
+      res.send({user, jwtToken});
     } else {
-      res.send(false)
+      res.send(false);
     }
-
   } catch (e) {
     console.log(e);
-    res.sendStatus(500)
+    res.sendStatus(500);
   }
 });
 
@@ -59,14 +61,14 @@ router.post("/", async function(req, res) {
   req.body.company = req.body.company.toLowerCase();
 
   try {
-     await hyperledger.invoke("mychannel", "airlineMRO", [
+    await hyperledger.invoke("mychannel", "airlineMRO", [
       "registerUser",
       JSON.stringify(req.body)
     ]);
     res.sendStatus(200);
   } catch (e) {
     console.log(e);
-    res.sendStatus(500)
+    res.sendStatus(500);
   }
 });
 
