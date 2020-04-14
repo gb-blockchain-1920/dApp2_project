@@ -148,12 +148,12 @@ _Functions for managing data and interacting with data from outside Hyperledger_
   - [ ] Storing more parameters - if necessary
 - [ ] Express API
   - [x] basic API
-  - [ ] user validation using JWT
+  - [x] user validation using JWT
 - [ ] React front-end
   - [x] Basic framework
   - [x] Mobile friendly site
   - [ ] Completed site
-  - [ ] Status indicator for front-end on connecting to API (see if it's still active)
+  - [x] Status indicator for front-end on connecting to API (see if it's still active)
 - [ ] Test cases for chaincode & API
 - [ ] CI/CD
   - [x] for site deployment

@@ -47,7 +47,7 @@ img {
 .panel-content {
   width: 60rem;
   max-width: 100%;
-  border: 1px solid #aaa;
+  /* border: 1px solid #aaa; */
   min-height: 10rem;
 }
 

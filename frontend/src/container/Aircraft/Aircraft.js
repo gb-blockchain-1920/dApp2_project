@@ -1,9 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import { Tabs, Tab, Typography, Box, AppBar} from "@material-ui/core";
-import {ProgressBar} from "../../components/ProgressBar/ProgressBar";
+import { Tabs, Tab, Typography, Box, AppBar } from "@material-ui/core";
+import { ProgressBar } from "../../components/ProgressBar/ProgressBar";
 import "./Aircraft.css";
+import { wordCapitalization } from "../../scripts/wordManipulation.js";
+import moment from "moment";
+import { getAircraft } from "../../scripts/hyperledger.js";
+import { MaintenanceRecordPanel } from "../../components/MaintenanceRecordPanel/MaintenanceRecordPanel";
+import { PartProvenance } from "../../components/PartProvenance/PartProvenance";
 
 //from: https://material-ui.com/components/tabs/
 
@@ -20,7 +25,11 @@ function TabPanel(props) {
       className="detailContainer"
       {...other}
     >
-      {value === index && <Box p={3} className="detailContainer-box">{children}</Box>}
+      {value === index && (
+        <Box p={3} className="detailContainer-box">
+          {children}
+        </Box>
+      )}
     </Typography>
   );
 }
@@ -55,7 +64,7 @@ const TabWrapper = ({ condition, children }) =>
     </AppBar>
   );
 
-export const Aircraft = () => {
+export const Aircraft = ({ connected, userData }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [isMobile, setIsMobile] = React.useState(false);
@@ -81,15 +90,55 @@ export const Aircraft = () => {
   }, [isMobile]);
 
   React.useEffect(() => {
-    setData(
-      new Array(20).fill({
-        aircraft: "Boeing 787-8 Dreamliner",
-        tailNumber: "G-ZBJG",
-        image: "https://cdn.jetphotos.com/full/6/27290_1582395615.jpg",
-        company: "British Airways"
-      })
-    );
-  }, []);
+    if (!connected) {
+      const maintTypes = ["A", "B", "C", "D"];
+      setData(
+        new Array(20).fill({
+          description: {
+            aircraft: "Boeing 787-8 Dreamliner",
+            tailNumber: "G-ZBJG",
+            image: "https://cdn.jetphotos.com/full/6/27290_1582395615.jpg"
+          },
+          maintenanceSchedule: maintTypes.map(type => {
+            return {
+              type: type,
+              lastCompletedDate: new Date(),
+              lastCompletedHours: Math.round(Math.random() * 100),
+              maxHours: 250
+            };
+          }),
+          flightHours: Math.round(Math.random() * 250),
+          owner: [
+            {
+              company: "british airways",
+              purchaseDate: new Date(),
+              soldDate: null
+            }
+          ],
+          partsList: [],
+          maintainers: [],
+          maintenanceReports: new Array(2).fill(
+            JSON.stringify({
+              date: new Date(),
+              type: "General",
+              notes: "Test maintenance report",
+              partsReplaced: {
+                newPart: "test part",
+                "testing part": "testing parts"
+              }
+            })
+          )
+        })
+      );
+    } else {
+      userData.info.aircraft.forEach(aircraftID => {
+        getAircraft(aircraftID).then(res => {
+          const newData = res;
+          setData(original => [...original, newData]);
+        });
+      });
+    }
+  }, [connected, userData.info.aircraft]);
 
   return (
     <div
@@ -107,7 +156,7 @@ export const Aircraft = () => {
         >
           {data.map((obj, index) => (
             <Tab
-              label={`Plane ${index + 1}`}
+              label={obj.description.tailNumber}
               key={`plane${index}`}
               {...a11yProps(index)}
             />
@@ -116,26 +165,55 @@ export const Aircraft = () => {
       </TabWrapper>
       {data.map((obj, index) => (
         <TabPanel value={value} index={index} key={`aircraft${index}`}>
-          <Box m={1} className="panel-header-details">
-            <Typography variant="h2">{obj.aircraft}</Typography>
-            <Typography variant="h6">{`Tail Number: ${obj.tailNumber}`}</Typography>
-            <Typography variant="h6">{`Company: ${obj.company} ${index+1}`}</Typography>
+          <Box className="panel-header-details">
+            <Typography variant="h2">{obj.description.aircraft}</Typography>
+            <Typography variant="h6">{`Tail Number: ${obj.description.tailNumber}`}</Typography>
+            <Typography variant="h6">{`Company: ${wordCapitalization(
+              obj.owner[obj.owner.length - 1].company
+            )}`}</Typography>
           </Box>
           <Box className="panel-header-image">
-            <img src={obj.image} alt={`${obj.aircraft} ${obj.tailNumber}`}/>
+            <img
+              src={obj.description.image}
+              alt={`${obj.description.aircraft} ${obj.description.tailNumber}`}
+            />
           </Box>
           <Box my={1} className="panel-content">
-            <Typography variant="h6">Maintenance Checks</Typography>
-            <ProgressBar start={0} end={10} current={Math.round(Math.random()*10)} label={`A Check Due: ${"date"}`}/>
-            <ProgressBar start={0} end={10} current={Math.round(Math.random()*10)} label={`B Check Due: ${"date"}`}/>
-            <ProgressBar start={0} end={10} current={Math.round(Math.random()*10)} label={`C Check Due: ${"date"}`}/>
-            <ProgressBar start={0} end={10} current={Math.round(Math.random()*10)} label={`D Check Due: ${"date"}`}/>
+            <Typography variant="h5">Maintenance Checks</Typography>
+            <Box pt={1}>
+              {obj.maintenanceSchedule.map(maintenance => {
+                return (
+                  <ProgressBar
+                    start={maintenance.lastCompletedHours}
+                    end={maintenance.lastCompletedHours + maintenance.maxHours}
+                    current={obj.flightHours}
+                    label={`${maintenance.type} Check - Last Completed: ${moment(
+                      maintenance.lastCompletedDate
+                    ).format("D MMM YYYY")}`}
+                    key={maintenance.type}
+                  />
+                );
+              })}
+            </Box>
           </Box>
           <Box my={1} className="panel-content">
-            <Typography variant="h6">Parts Provenance</Typography>
+            <Typography variant="h5">Parts Provenance</Typography>
+            <Box pt={1}>
+              {obj.partsList.map((part, index) => (
+                <PartProvenance part={part} key={index} />
+              ))}
+            </Box>
           </Box>
           <Box my={1} className="panel-content">
-            <Typography variant="h6">Maintenance Reports</Typography>
+            <Typography variant="h5">Maintenance Reports</Typography>
+            <Box pt={1}>
+              {obj.maintenanceReports.map((report, index) => {
+                report.partsReplaced = JSON.parse(
+                  JSON.parse(report.partsReplaced)
+                );
+                return <MaintenanceRecordPanel report={report} key={index} />;
+              })}
+            </Box>
           </Box>
         </TabPanel>
       ))}

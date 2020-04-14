@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { Login } from "./container/Login/Login";
 import { Aircraft } from "./container/Aircraft/Aircraft";
@@ -10,28 +10,33 @@ function App() {
   const [list, setList] = React.useState([]);
   const companies = { list, setList };
   const [info, setInfo] = React.useState({});
-  const user = {info, setInfo};
+  const user = { info, setInfo };
 
   React.useEffect(() => {
-    try {
-      getCompanies().then(res => {
+    getCompanies()
+      .then(res => {
         setList(res);
         setConnected(true);
+      })
+      .catch(e => {
+        setConnected(false);
+        setList(["air canada", "KLM", "united", "delta"]); //offline data for demo purposes
       });
-    } catch (e) {
-      setConnected(false);
-    }
-  }, [])
+  }, []);
 
   return (
     <React.Fragment>
       <NavigationBar connected={connected} />
       <Switch>
         <Route path="/aircraft">
-          <Aircraft />
+          {Object.keys(info).length === 0 ? (
+            <Redirect to="/" />
+          ) : (
+            <Aircraft connected={connected} userData={user} />
+          )}
         </Route>
         <Route path="/">
-          <Login companies={companies} userData={user}/>
+          <Login connected={connected} companies={companies} userData={user} />
         </Route>
       </Switch>
     </React.Fragment>
