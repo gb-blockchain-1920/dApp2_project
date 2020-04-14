@@ -9,11 +9,18 @@ router.get("/", async function(req, res) {
     return res.sendStatus(400);
   }
 
+  //preprocessing
+  const ids = req.query.id.split(",");
+  let aircraft = [];
+
   try {
-    const aircraft = await hyperledger.query("mychannel", "airlineMRO", [
-      "getAircraft",
-      req.query.id
-    ]);
+    for (let ii = 0; ii < ids.length; i++) {
+      const aircraftData = await hyperledger.query("mychannel", "airlineMRO", [
+        "getAircraft",
+        req.query.id
+      ]);
+      aircraft = aircraft.push(aircraftData);
+    }
     res.send(aircraft);
   } catch (e) {
     console.log(e);

@@ -131,12 +131,16 @@ export const Aircraft = ({ connected, userData }) => {
         })
       );
     } else {
+      let output = [];
       userData.info.aircraft.forEach(aircraftID => {
         getAircraft(aircraftID).then(res => {
-          const newData = res;
-          setData(original => [...original, newData]);
+          output = output.push(res)
         });
       });
+    }
+
+    return (output) => {
+      setData(output);
     }
   }, [connected, userData.info.aircraft]);
 
