@@ -5,8 +5,9 @@ import { TextInput } from "../../components/TextInput/TextInput";
 import { AutoCompleteText } from "../../components/AutoCompleteText/AutoCompleteText";
 import { useHistory } from "react-router-dom";
 import { user } from "../../scripts/hyperledger.js";
+import { wordCapitalization } from "../../scripts/wordManipulation.js"
 
-export const Login = ({ companies, userData }) => {
+export const Login = ({ connected, companies, userData }) => {
   const history = useHistory();
   const types = ["Administrator", "Maintainer"];
   const [register, setRegister] = React.useState(false);
@@ -28,7 +29,7 @@ export const Login = ({ companies, userData }) => {
     console.log("login click");
     const data = userPass;
     delete data.verified; // remove extra key value pair
-    const res = await user("login", data);
+    const res = connected ? await user("login", data) : true;
     console.log(res);
     if (!res) {
       //error logging in
@@ -44,7 +45,7 @@ export const Login = ({ companies, userData }) => {
     setAPIcalled(true);
     const data = userPass;
     delete data.verified; // remove extra key value pair
-    const res = await user("register", data);
+    const res = connected ? await user("register", data) : true;
     setAPIcalled(false);
     console.log(res);
 
@@ -65,20 +66,13 @@ export const Login = ({ companies, userData }) => {
 
   const autocompleteOnChange = (event, handler, key, obj) => {
     let value = event.target.value;
-    console.log(value);
+    // console.log(value);
     if (typeof value === "number") {
       value = event.target.innerText.toLowerCase();
     }
     handler(prev => {
       return { ...prev, [key]: value || "" };
     });
-  };
-
-  const wordCapitalization = phrase => {
-    return phrase
-      .split(" ")
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
   };
 
   return (

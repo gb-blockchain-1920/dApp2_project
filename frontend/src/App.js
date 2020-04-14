@@ -10,28 +10,29 @@ function App() {
   const [list, setList] = React.useState([]);
   const companies = { list, setList };
   const [info, setInfo] = React.useState({});
-  const user = {info, setInfo};
+  const user = { info, setInfo };
 
   React.useEffect(() => {
-    try {
-      getCompanies().then(res => {
+    getCompanies()
+      .then(res => {
         setList(res);
         setConnected(true);
+      })
+      .catch(e => {
+        setConnected(false);
+        setList(["air canada", "KLM", "united", "delta"]); //offline data for demo purposes
       });
-    } catch (e) {
-      setConnected(false);
-    }
-  }, [])
+  }, []);
 
   return (
     <React.Fragment>
       <NavigationBar connected={connected} />
       <Switch>
         <Route path="/aircraft">
-          <Aircraft />
+          <Aircraft connected={connected} userData={user}/>
         </Route>
         <Route path="/">
-          <Login companies={companies} userData={user}/>
+          <Login connected={connected} companies={companies} userData={user} />
         </Route>
       </Switch>
     </React.Fragment>
