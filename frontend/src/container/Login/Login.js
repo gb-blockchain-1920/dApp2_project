@@ -28,9 +28,9 @@ export const Login = ({ companies }) => {
     console.log("login click");
     const data = userPass;
     delete data.verified; // remove extra key value pair
-    const res = await user("logion", data);
+    const res = await user("login", data);
     console.log(res);
-    history.push("/aircraft");
+    // history.push("/aircraft");
   };
 
   const registerHandle = async () => {

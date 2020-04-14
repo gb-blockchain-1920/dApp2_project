@@ -18,7 +18,13 @@ export const user = async (postType, params) => {
     body: JSON.stringify(params)
   });
   console.log(res);
-  return res.status === 200;
+
+  if (postType === "login") {
+    const output = await res.json();
+    return output;
+  } else {
+    return res.status === 200;
+  }
 };
 
 export default getCompanies;
