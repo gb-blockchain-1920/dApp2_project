@@ -6,7 +6,7 @@ export const getCompanies = async () => {
   return data;
 };
 
-export const user = async (postType, params) => {
+export const getUser = async (postType, params) => {
   params.postType = postType;
   const res = await fetch(address + "login", {
     method: "POST",
@@ -25,8 +25,14 @@ export const user = async (postType, params) => {
   }
 };
 
-export const aircraft = async id => {
+export const getAircraft = async id => {
   const res = await fetch(address + `aircraft?id=${id}`);
+  const data = await res.json();
+  return data;
+};
+
+export const getPart = async id => {
+  const res = await fetch(address + `part?id=${id}`);
   const data = await res.json();
   return data;
 };

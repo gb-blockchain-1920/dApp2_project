@@ -4,7 +4,7 @@ import { LoginCard } from "../../components/LoginCard/LoginCard";
 import { TextInput } from "../../components/TextInput/TextInput";
 import { AutoCompleteText } from "../../components/AutoCompleteText/AutoCompleteText";
 import { useHistory } from "react-router-dom";
-import { user } from "../../scripts/hyperledger.js";
+import { getUser } from "../../scripts/hyperledger.js";
 import { wordCapitalization } from "../../scripts/wordManipulation.js"
 
 export const Login = ({ connected, companies, userData }) => {
@@ -29,7 +29,7 @@ export const Login = ({ connected, companies, userData }) => {
     console.log("login click");
     const data = userPass;
     delete data.verified; // remove extra key value pair
-    const res = connected ? await user("login", data) : true;
+    const res = connected ? await getUser("login", data) : true;
     console.log(res);
     if (!res) {
       //error logging in
@@ -45,7 +45,7 @@ export const Login = ({ connected, companies, userData }) => {
     setAPIcalled(true);
     const data = userPass;
     delete data.verified; // remove extra key value pair
-    const res = connected ? await user("register", data) : true;
+    const res = connected ? await getUser("register", data) : true;
     setAPIcalled(false);
     console.log(res);
 
