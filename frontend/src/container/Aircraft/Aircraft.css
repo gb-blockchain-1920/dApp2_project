@@ -51,6 +51,15 @@ img {
   min-height: 10rem;
 }
 
+.expansion-secondLabel{
+  padding-left: 1rem;
+}
+
+.expansionPanel-center {
+  display: flex;
+  flex-direction: column;
+}
+
 @media only screen and (max-width: 600px) {
   h2 {
     font-size: 2rem !important;

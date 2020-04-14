@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { Login } from "./container/Login/Login";
 import { Aircraft } from "./container/Aircraft/Aircraft";
@@ -29,7 +29,11 @@ function App() {
       <NavigationBar connected={connected} />
       <Switch>
         <Route path="/aircraft">
-          <Aircraft connected={connected} userData={user}/>
+          {Object.keys(info).length === 0 ? (
+            <Redirect to="/" />
+          ) : (
+            <Aircraft connected={connected} userData={user} />
+          )}
         </Route>
         <Route path="/">
           <Login connected={connected} companies={companies} userData={user} />
