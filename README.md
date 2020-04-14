@@ -145,19 +145,21 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 
 - [x] Hyperledger Fabric (maintenance schedule + parts provenance)
   - [x] Complete logic
-  - [ ] Storing more parameters - if necessary
-- [ ] Express API
+  - [x] Storing more parameters - if necessary
+- [x] Express API
   - [x] basic API
   - [x] user validation using JWT
 - [ ] React front-end
   - [x] Basic framework
   - [x] Mobile friendly site
-  - [ ] Completed site
   - [x] Status indicator for front-end on connecting to API (see if it's still active)
-- [ ] Test cases for chaincode & API
-- [ ] CI/CD
+  - [ ] Administrator interactions
+  - [ ] Maintainer interactions
+  - [ ] Full system test using front-end only
+- [x] ~~Test cases for chaincode & API~~ _(too difficult for PoC)_
+- [x] CI/CD
   - [x] for site deployment
-  - [ ] for test cases
+  - [ ] ~~for test cases~~ _(too difficult for PoC)_
 
 ## Notes
 
@@ -170,3 +172,4 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 - [Installation instructions for Hyperledger](./documentation/chaincodeInstallation.md)
 - [Sample chaincode calls](./chaincode/javascript/commands.md)
 - [Github pages + React](https://github.com/gitname/react-gh-pages)
+- [Persistent server - nohup yarn start &](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service)
