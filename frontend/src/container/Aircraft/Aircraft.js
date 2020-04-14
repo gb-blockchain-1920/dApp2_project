@@ -131,17 +131,12 @@ export const Aircraft = ({ connected, userData }) => {
         })
       );
     } else {
-      let output = [];
-      userData.info.aircraft.forEach(aircraftID => {
-        getAircraft(aircraftID).then(res => {
-          output = output.push(res)
-        });
-      });
+      getAircraft(userData.info.aircraft.join(",")).then(res => setData(res));
     }
 
-    return (output) => {
+    return output => {
       setData(output);
-    }
+    };
   }, [connected, userData.info.aircraft]);
 
   return (
@@ -191,7 +186,9 @@ export const Aircraft = ({ connected, userData }) => {
                     start={maintenance.lastCompletedHours}
                     end={maintenance.lastCompletedHours + maintenance.maxHours}
                     current={obj.flightHours}
-                    label={`${maintenance.type} Check - Last Completed: ${moment(
+                    label={`${
+                      maintenance.type
+                    } Check - Last Completed: ${moment(
                       maintenance.lastCompletedDate
                     ).format("D MMM YYYY")}`}
                     key={maintenance.type}
@@ -203,9 +200,9 @@ export const Aircraft = ({ connected, userData }) => {
           <Box my={1} className="panel-content">
             <Typography variant="h5">Parts Provenance</Typography>
             <Box pt={1}>
-              {obj.partsList.map((part, index) => (
-                <PartProvenance part={part} key={index} />
-              ))}
+              {obj.partsList.length > 0 && (
+                <PartProvenance parts={obj.partsList} />
+              )}
             </Box>
           </Box>
           <Box my={1} className="panel-content">
