@@ -9,6 +9,8 @@ function App() {
   const [connected, setConnected] = React.useState(false);
   const [list, setList] = React.useState([]);
   const companies = { list, setList };
+  const [info, setInfo] = React.useState({});
+  const user = {info, setInfo};
 
   React.useEffect(() => {
     try {
@@ -29,7 +31,7 @@ function App() {
           <Aircraft />
         </Route>
         <Route path="/">
-          <Login companies={companies} />
+          <Login companies={companies} userData={user}/>
         </Route>
       </Switch>
     </React.Fragment>

@@ -6,7 +6,7 @@ import { AutoCompleteText } from "../../components/AutoCompleteText/AutoComplete
 import { useHistory } from "react-router-dom";
 import { user } from "../../scripts/hyperledger.js";
 
-export const Login = ({ companies }) => {
+export const Login = ({ companies, userData }) => {
   const history = useHistory();
   const types = ["Administrator", "Maintainer"];
   const [register, setRegister] = React.useState(false);
@@ -30,7 +30,13 @@ export const Login = ({ companies }) => {
     delete data.verified; // remove extra key value pair
     const res = await user("login", data);
     console.log(res);
-    // history.push("/aircraft");
+    if (!res) {
+      //error logging in
+    } else {
+      userData.setInfo(res.user);
+      window.sessionStorage.setItem("jwt", res.jwtToken)
+      history.push("/aircraft");
+    }
   };
 
   const registerHandle = async () => {
@@ -41,7 +47,12 @@ export const Login = ({ companies }) => {
     const res = await user("register", data);
     setAPIcalled(false);
     console.log(res);
-    loginHandle();
+
+    if (res) {
+      loginHandle();
+    } else {
+      //error registering
+    }
   };
 
   const onChangeUserPass = event => {
