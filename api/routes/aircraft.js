@@ -98,14 +98,14 @@ router.patch("/", async function(req, res) {
 
   try {
     //if there are replaced parts, call replace parts function
-    // if (Object.keys(req.body.replacedParts).length > 0) {
-    //   await hyperledger.invoke("mychannel", "airlineMRO", [
-    //     "replaceParts",
-    //     req.body.tailNumber,
-    //     JSON.stringify(req.body.replacedParts)
-    //   ]);
-    // }
-    // console.log("replace parts call complete");
+    if (Object.keys(req.body.replacedParts).length > 0) {
+      await hyperledger.invoke("mychannel", "airlineMRO", [
+        "replaceParts",
+        req.body.tailNumber,
+        JSON.stringify(req.body.replacedParts)
+      ]);
+    }
+    console.log("replace parts call complete");
     //update maintenance
     await hyperledger.invoke("mychannel", "airlineMRO", [
       "performMaintenance",

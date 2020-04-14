@@ -27,11 +27,11 @@ cp -R ./dApp2_project/chaincode/. ./fabric-samples/chaincode/airlineMRO
 cd ./fabric-samples/chaincode
 mv ./eKYC/start_airlineMRO.sh ../fabcar
 ```
-If necessary change the permissions on the `start_ekyc.sh` script and run
+If necessary change the permissions on the `start_airlineMRO.sh` script and run
 ```
 cd ../fabcar
-chmod 777 start_ekyc.sh
-./start_ekyc.sh
+chmod 777 start_airlineMRO.sh
+./start_airlineMRO.sh
 ```
 
 #### API Setup
