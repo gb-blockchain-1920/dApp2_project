@@ -163,11 +163,11 @@ class airlineMRO extends Contract {
     }
 
     //register a new aircraft in the blockchain
-    async registerAircraft(ctx, aircraft, tailNumber, company) {
+    async registerAircraft(ctx, aircraft, tailNumber, company, image) {
         console.log("======== START : Register Aircraft ==========");
 
         const aircraftObj = {
-            description: { aircraft, tailNumber },
+            description: { aircraft, tailNumber, image },
             maintenanceSchedule: [
                 {
                     type: "A",

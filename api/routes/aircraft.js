@@ -39,10 +39,11 @@ router.post("/", async function(req, res) {
 
   console.log(req.body);
   if (
-    Object.keys(req.body).length !== 3 ||
+    Object.keys(req.body).length !== 4 ||
     !req.body.aircraft ||
     !req.body.tailNumber ||
-    !req.body.company
+    !req.body.company ||
+    !req.body.image
   ) {
     return res.sendStatus(400);
   }
@@ -54,7 +55,8 @@ router.post("/", async function(req, res) {
       "registerAircraft",
       req.body.aircraft,
       req.body.tailNumber,
-      req.body.company
+      req.body.company,
+      req.body.image
     ]);
     res.sendStatus(200);
   } catch (e) {
