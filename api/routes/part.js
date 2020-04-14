@@ -9,12 +9,18 @@ router.get("/", async function(req, res) {
     return res.sendStatus(400);
   }
 
+  const ids = req.query.id.split(",");
+  let parts = [];
+
   try {
-    const part = await hyperledger.query("mychannel", "airlineMRO", [
-      "getPart",
-      req.query.id
-    ]);
-    res.send(part);
+    for (let ii = 0; ii < ids.length; ii++) {
+      const part = await hyperledger.query("mychannel", "airlineMRO", [
+        "getPart",
+        ids[ii]
+      ]);
+      parts = [...parts, part];
+    }
+    res.send(parts);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -27,13 +33,12 @@ router.post("/", async function(req, res) {
     const tokenData = await token.decode(req.headers.authorization);
     //if not authorized maintainer for the aircraft throw error
     if (tokenData.type !== "maintainer") {
-      return res.sendStatus(401)
+      return res.sendStatus(401);
     }
   } catch (e) {
     console.log(e);
     return res.sendStatus(401);
   }
-
 
   //validate data
   console.log(req.body);
