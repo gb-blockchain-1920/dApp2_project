@@ -4,15 +4,15 @@ const hyperledger = require("../scripts/hyperledger");
 const token = require("../scripts/token");
 
 router.get("/", async function(req, res) {
-  console.log(req.body);
-  if (!req.body.partID) {
+  console.log(req.query.id);
+  if (!req.query.id) {
     return res.sendStatus(400);
   }
 
   try {
     const part = await hyperledger.query("mychannel", "airlineMRO", [
       "getPart",
-      req.body.partID
+      req.query.id
     ]);
     res.send(part);
   } catch (e) {
