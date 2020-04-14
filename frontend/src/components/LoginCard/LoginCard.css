@@ -9,9 +9,9 @@
 
 .loginCard-container {
   max-width: 75%;
-  width: 25rem;
-  height: 35rem;
-  max-height: 60%;
+  width: 26rem;
+  height: 37rem;
+  max-height: 65%;
 }
 
 .loginCard-content {
@@ -24,6 +24,10 @@
   justify-content: center;
   text-align: center;
   flex-direction: column;
+}
+
+.loginCard-mainButton {
+  margin-left: 0 !important;
 }
 
 @media only screen and (max-width: 600px) {

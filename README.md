@@ -5,7 +5,6 @@ Aaron Lu - 101278524
 
 [Hyperledger Fabric + Aircraft MRO Pitch Presentation](https://docs.google.com/presentation/d/1wEVzxKrAMhcqZpjzRCup2dHBgFmt6gY-MDXYOtnlCzk/edit?usp=sharing)
 
-
 ## Description
 
 The aerospace industry has a vast and complex supply chain involving hundreds to thousands of companies and millions of parts. The entire supply chain must meet specific regulations and procedures specified by governing bodies from governments and other organizations. The many facets of the supply chain can be seen in the various phases of aircraft development and deployment - parts procurement, aircraft assembly, certification, delivery, maintenance, and end-of-life.
@@ -33,7 +32,6 @@ However, IoT devices often provide massive amounts of information and analyzing 
 ### Timeline/Implementation
 
 ![](./documentation/timeline.png)
-
 
 ## Technical Details (PoC)
 
@@ -65,6 +63,7 @@ _Note: IoT devices and predictive maintenance are not implemented in PoC_
 ![](./documentation/sequenceDiagram.png)
 
 Additional pieces of modeling can be found in the `documentation` folder:
+
 - [User stories](./documentation/userStories.md)
 - [Class diagram](./documentation/classDiagram.png)
 
@@ -112,7 +111,7 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 | Function Name        | Input                                                                      | Output              | Restricted                  | Details                                                                                                                                     |
 | -------------------- | -------------------------------------------------------------------------- | ------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `registerUser`       | string `username`, string `password`, string `type`, string `company`      | bool `success`      | Admin + Maintainer          | Creates a user profile for the admin or maintainer, hashed username and password are stored in blockchain, fails if username already exists |
-| `checkUser`          | string `username`, string `password`, string `type`, string `company`      | object `user`      | Admin + Maintainer          | Checks the username and password against blockchain information, and returns a boolean                                                      |
+| `checkUser`          | string `username`, string `password`, string `type`, string `company`      | object `user`       | Admin + Maintainer          | Checks the username and password against blockchain information, and returns a boolean                                                      |
 | `registerAircraft`   | string `aircraft`, string `tailNumber`, string `company`                   | string `tailNumber` | Admin                       | Register a new aircraft and create the aircraft object                                                                                      |
 | `assignAircraft`     | string `username`, string `tailNumber`, string `company`                   | bool `success`      | Admin                       | Assign the maintainer to the aircraft so they have access to the data                                                                       |
 | `getAircraft`        | string `tailNumber`                                                        | object `aircraft`   | Admin + Assigned Maintainer | Gets all of the information for a specific aircraft in the format described above                                                           |
@@ -127,20 +126,20 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 
 **API Endpoints**
 
-| Endpoint                                       | Type  | Chaincode Function   | Returns               |
-| ---------------------------------------------- | ----- | -------------------- | --------------------- |
+| Endpoint                                       | Type  | Chaincode Function                    | Returns               |
+| ---------------------------------------------- | ----- | ------------------------------------- | --------------------- |
 | `\` | GET | `getCompanies` | array `companies` |
-| `\login`                                       | POST  | `registerUser`       | bool `success`        |
-| `\login`                                       | GET   | `checkUser`          | string `jsonwebtoken` |
-| `\aircraft`                                    | POST  | `registerAircraft`   | object `aircraft`     |
-| `\aircraft`                                    | GET   | `getAircraft`        | object `aircraft`     |
+| `\login`                                       | POST  | `registerUser`                        | bool `success`        |
+| `\login`                                       | POST  | `checkUser`                           | string `jsonwebtoken` |
+| `\aircraft`                                    | POST  | `registerAircraft`                    | object `aircraft`     |
+| `\aircraft`                                    | GET   | `getAircraft`                         | object `aircraft`     |
 | `\aircraft`                                    | PATCH | `performMaintenance` + `replaceParts` | object `aircraft`     |
-| `\part`                                        | GET   | `getPart`            | object `part`         |
-| `\part`                                        | POST  | `newPart`            | string `partID`       |
-| `\flight`                                      | POST  | `updateFlightHours`  | number `hours`        |
-| `\admin`                                       | POST  | `assignAircraft`     | bool `success`        |
-| `\admin`                                       | PATCH | `sellAircraft`       | bool `success`        |
-| `\admin`                                       | GET   | `getMaintainers`     | array `maintainers`   |
+| `\part`                                        | GET   | `getPart`                             | object `part`         |
+| `\part`                                        | POST  | `newPart`                             | string `partID`       |
+| `\flight`                                      | POST  | `updateFlightHours`                   | number `hours`        |
+| `\admin`                                       | POST  | `assignAircraft`                      | bool `success`        |
+| `\admin`                                       | PATCH | `sellAircraft`                        | bool `success`        |
+| `\admin`                                       | GET   | `getMaintainers`                      | array `maintainers`   |
 
 ## Goals + Tasks
 
@@ -161,6 +160,7 @@ _Functions for managing data and interacting with data from outside Hyperledger_
   - [ ] for test cases
 
 ## Notes
+
 - Validation with JSON web tokens is not a good security practice. JWT was used for ease of implementation for PoC.
 
 ## Resources

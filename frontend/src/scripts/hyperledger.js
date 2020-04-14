@@ -8,16 +8,23 @@ export const getCompanies = async () => {
   return data;
 };
 
-export const registerUser = async params => {
+export const user = async (postType, params) => {
+  params.postType = postType;
   const res = await fetch(address + "login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: params
+    body: JSON.stringify(params)
   });
-  const data = await res.json();
-  return data;
+  console.log(res);
+
+  if (postType === "login") {
+    const output = await res.json();
+    return output;
+  } else {
+    return res.status === 200;
+  }
 };
 
 export default getCompanies;

@@ -16,6 +16,7 @@ export const NavigationBar = ({ connected }) => {
   const history = useHistory();
   const location = useLocation();
   const logout = () => {
+    window.sessionStorage.removeItem('jwt');
     history.push("/");
     console.log("logout callback");
   };

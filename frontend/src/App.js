@@ -2,24 +2,26 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { Login } from "./container/Login/Login";
-import { Aircraft } from "./container/Aircraft/Aircraft"
-import { getCompanies } from "./scripts/hyperledger.js"
+import { Aircraft } from "./container/Aircraft/Aircraft";
+import { getCompanies } from "./scripts/hyperledger.js";
 
 function App() {
   const [connected, setConnected] = React.useState(false);
   const [list, setList] = React.useState([]);
-  const companies = {list, setList}
+  const companies = { list, setList };
+  const [info, setInfo] = React.useState({});
+  const user = {info, setInfo};
+
   React.useEffect(() => {
-    //check hyperledger status
     try {
       getCompanies().then(res => {
-        companies.setList(res);
+        setList(res);
         setConnected(true);
       });
     } catch (e) {
       setConnected(false);
     }
-  }, [companies]);
+  }, [])
 
   return (
     <React.Fragment>
@@ -29,7 +31,7 @@ function App() {
           <Aircraft />
         </Route>
         <Route path="/">
-          <Login companies={companies}/>
+          <Login companies={companies} userData={user}/>
         </Route>
       </Switch>
     </React.Fragment>

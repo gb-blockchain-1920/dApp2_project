@@ -14,6 +14,7 @@ export const LoginCard = ({
   onClick,
   disabled,
   buttonText,
+  switchText,
   toggleClick,
   children
 }) => {
@@ -27,9 +28,7 @@ export const LoginCard = ({
         <CardActions className="loginCard-center">
           <Box mb={1}>
             <Button onClick={toggleClick}>
-              {heading === "User Login"
-                ? "Register New User"
-                : "Login Existing User"}
+              {switchText}
             </Button>
           </Box>
           <Button
@@ -38,6 +37,7 @@ export const LoginCard = ({
             color="primary"
             onClick={onClick}
             disabled={disabled}
+            className="loginCard-mainButton"
           >
             {buttonText}
           </Button>

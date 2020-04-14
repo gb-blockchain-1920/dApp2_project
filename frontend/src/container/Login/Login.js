@@ -4,39 +4,55 @@ import { LoginCard } from "../../components/LoginCard/LoginCard";
 import { TextInput } from "../../components/TextInput/TextInput";
 import { AutoCompleteText } from "../../components/AutoCompleteText/AutoCompleteText";
 import { useHistory } from "react-router-dom";
-import { registerUser } from "../../scripts/hyperledger.js"
+import { user } from "../../scripts/hyperledger.js";
 
-export const Login = ({ companies }) => {
+export const Login = ({ companies, userData }) => {
   const history = useHistory();
-  const roles = ["Administrator", "Maintainer"];
+  const types = ["Administrator", "Maintainer"];
   const [register, setRegister] = React.useState(false);
   const [userPass, setUserPass] = React.useState({
     username: "",
     password: "",
-    role: "",
+    type: "",
     company: ""
   });
-
-  const [newUser, setNewUser] = React.useState({
-    username: "",
-    password: "",
-    verified: "",
-    role: "",
-    company: ""
-  });
+  const [validatedPass, setValidatedPass] = React.useState("");
   const [validate, setValidate] = React.useState(false);
+  const [apiCalled, setAPIcalled] = React.useState(false);
+
+  React.useEffect(() => {
+    setValidate(!!validatedPass && userPass.password !== validatedPass);
+  }, [userPass.password, validatedPass]);
 
   const loginHandle = async () => {
     console.log("login click");
-    history.push("/aircraft");
+    const data = userPass;
+    delete data.verified; // remove extra key value pair
+    const res = await user("login", data);
+    console.log(res);
+    if (!res) {
+      //error logging in
+    } else {
+      userData.setInfo(res.user);
+      window.sessionStorage.setItem("jwt", res.jwtToken)
+      history.push("/aircraft");
+    }
   };
 
   const registerHandle = async () => {
     console.log("register click");
-    const data = newUser;
+    setAPIcalled(true);
+    const data = userPass;
     delete data.verified; // remove extra key value pair
-    const res = await registerUser(data);
+    const res = await user("register", data);
+    setAPIcalled(false);
     console.log(res);
+
+    if (res) {
+      loginHandle();
+    } else {
+      //error registering
+    }
   };
 
   const onChangeUserPass = event => {
@@ -47,26 +63,15 @@ export const Login = ({ companies }) => {
     });
   };
 
-  const onChangeNew = event => {
-    const key = event.target.id.replace("New", "");
-    const value = event.target.value;
-    setNewUser(prev => {
-      return { ...prev, [key]: value };
-    });
-  };
-
   const autocompleteOnChange = (event, handler, key, obj) => {
     let value = event.target.value;
+    console.log(value);
     if (typeof value === "number") {
       value = event.target.innerText.toLowerCase();
     }
     handler(prev => {
       return { ...prev, [key]: value || "" };
     });
-  };
-
-  const validatePassword = () => {
-    setValidate(newUser.password !== newUser.verified);
   };
 
   const wordCapitalization = phrase => {
@@ -78,96 +83,63 @@ export const Login = ({ companies }) => {
 
   return (
     <div className="login-container">
-      {register ? (
-        <LoginCard
-          heading="Register New User"
-          onClick={registerHandle}
-          disabled={!Object.values(newUser).every(val => !!val)}
-          buttonText="Register"
-          toggleClick={() => setRegister(!register)}
-        >
-          <TextInput label="Username" onChange={onChangeNew} id="usernameNew" />
-          <TextInput
-            label="Password"
-            type="password"
-            onChange={onChangeNew}
-            id="passwordNew"
-          />
+      <LoginCard
+        heading={register ? "Register User" : "User Login"}
+        switchText={
+          register ? "Existing users sign in" : "New users register here"
+        }
+        onClick={register ? registerHandle : loginHandle}
+        disabled={
+          !Object.values(userPass).every(val => !!val) ||
+          apiCalled ||
+          validate ||
+          (register && !validatedPass)
+        }
+        buttonText={register ? "Register" : "Login"}
+        toggleClick={() => setRegister(!register)}
+      >
+        <TextInput
+          label="Username"
+          onChange={onChangeUserPass}
+          id="username"
+          value={userPass.username}
+        />
+        <TextInput
+          label="Password"
+          type="password"
+          onChange={onChangeUserPass}
+          id="password"
+          value={userPass.password}
+        />
+        {register && (
           <TextInput
             label="Confirm password"
             type="password"
-            onChange={event => {
-              if (validate) {
-                setValidate(false);
-              }
-              onChangeNew(event);
-            }}
             id="verified"
-            disabled={!newUser.password}
-            onBlur={validatePassword}
+            onChange={event => setValidatedPass(event.target.value)}
+            disabled={!userPass.password}
             error={validate}
             helperText={validate ? "passwords do not match" : ""}
           />
-          <AutoCompleteText
-            options={roles}
-            optionLabel={wordCapitalization}
-            label="Role"
-            onInputChange={event => {
-              autocompleteOnChange(event, setNewUser, "role", roles);
-            }}
-          />
-          <AutoCompleteText
-            options={companies.list}
-            optionLabel={wordCapitalization}
-            label="Company"
-            freeSolo={newUser.role === "administrator"}
-            onInputChange={event => {
-              autocompleteOnChange(
-                event,
-                setNewUser,
-                "company",
-                companies.list
-              );
-            }}
-          />
-        </LoginCard>
-      ) : (
-        <LoginCard
-          heading="User Login"
-          onClick={loginHandle}
-          disabled={!Object.values(userPass).every(val => !!val)}
-          buttonText="Login"
-          toggleClick={() => setRegister(!register)}
-        >
-          <TextInput
-            label="Username"
-            onChange={onChangeUserPass}
-            id="username"
-          />
-          <TextInput
-            label="Password"
-            type="password"
-            onChange={onChangeUserPass}
-            id="password"
-          />
-          <AutoCompleteText
-            options={roles}
-            optionLabel={wordCapitalization}
-            label="Role"
-            onInputChange={event => {
-              autocompleteOnChange(event, setUserPass, "role", roles);
-            }}
-          />
-          <AutoCompleteText
-            options={companies.list}
-            optionLabel={wordCapitalization}
-            label="Company"
-            onInputChange={event => {
-              autocompleteOnChange(event, setUserPass, "company", roles);
-            }}
-          />
-        </LoginCard>
-      )}
+        )}
+        <AutoCompleteText
+          options={types}
+          optionLabel={wordCapitalization}
+          label="Role"
+          onInputChange={event => {
+            autocompleteOnChange(event, setUserPass, "type", types);
+          }}
+        />
+        <AutoCompleteText
+          options={companies.list}
+          optionLabel={wordCapitalization}
+          label="Company"
+          freeSolo={userPass.type === "administrator" && register}
+          onInputChange={event => {
+            autocompleteOnChange(event, setUserPass, "company", companies.list);
+          }}
+        />
+      </LoginCard>
     </div>
   );
 };
