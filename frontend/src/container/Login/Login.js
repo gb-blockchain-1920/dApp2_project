@@ -34,7 +34,7 @@ export const Login = ({ connected, companies, userData }) => {
     if (!res) {
       //error logging in
     } else {
-      userData.setInfo(res.user);
+      userData.setInfo(res.user || {offline: true});
       window.sessionStorage.setItem("jwt", res.jwtToken)
       history.push("/aircraft");
     }

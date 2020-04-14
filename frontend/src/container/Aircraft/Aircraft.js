@@ -118,25 +118,24 @@ export const Aircraft = ({ connected, userData }) => {
           partsList: [],
           maintainers: [],
           maintenanceReports: new Array(2).fill(
-            JSON.stringify({
+            {
               date: new Date(),
               type: "General",
               notes: "Test maintenance report",
-              partsReplaced: {
+              partsReplaced: JSON.stringify({
                 newPart: "test part",
                 "testing part": "testing parts"
-              }
-            })
+              })
+            }
           )
         })
       );
     } else {
-      getAircraft(userData.info.aircraft.join(",")).then(res => setData(res));
+      getAircraft(userData.info.aircraft.join(",")).then(res => {
+        setData(res);
+        console.log(res);
+      });
     }
-
-    return output => {
-      setData(output);
-    };
   }, [connected, userData.info.aircraft]);
 
   return (
@@ -162,62 +161,66 @@ export const Aircraft = ({ connected, userData }) => {
           ))}
         </Tabs>
       </TabWrapper>
-      {data.map((obj, index) => (
-        <TabPanel value={value} index={index} key={`aircraft${index}`}>
-          <Box className="panel-header-details">
-            <Typography variant="h2">{obj.description.aircraft}</Typography>
-            <Typography variant="h6">{`Tail Number: ${obj.description.tailNumber}`}</Typography>
-            <Typography variant="h6">{`Company: ${wordCapitalization(
-              obj.owner[obj.owner.length - 1].company
-            )}`}</Typography>
-          </Box>
-          <Box className="panel-header-image">
-            <img
-              src={obj.description.image}
-              alt={`${obj.description.aircraft} ${obj.description.tailNumber}`}
-            />
-          </Box>
-          <Box my={1} className="panel-content">
-            <Typography variant="h5">Maintenance Checks</Typography>
-            <Box pt={1}>
-              {obj.maintenanceSchedule.map(maintenance => {
-                return (
-                  <ProgressBar
-                    start={maintenance.lastCompletedHours}
-                    end={maintenance.lastCompletedHours + maintenance.maxHours}
-                    current={obj.flightHours}
-                    label={`${
-                      maintenance.type
-                    } Check - Last Completed: ${moment(
-                      maintenance.lastCompletedDate
-                    ).format("D MMM YYYY")}`}
-                    key={maintenance.type}
-                  />
-                );
-              })}
+      {data.map((obj, index) => {
+        console.log(obj);
+        return (
+          <TabPanel value={value} index={index} key={`aircraft${index}`}>
+            <Box className="panel-header-details">
+              <Typography variant="h2">{obj.description.aircraft}</Typography>
+              <Typography variant="h6">{`Tail Number: ${obj.description.tailNumber}`}</Typography>
+              <Typography variant="h6">{`Company: ${wordCapitalization(
+                obj.owner[obj.owner.length - 1].company
+              )}`}</Typography>
             </Box>
-          </Box>
-          <Box my={1} className="panel-content">
-            <Typography variant="h5">Parts Provenance</Typography>
-            <Box pt={1}>
-              {obj.partsList.length > 0 && (
-                <PartProvenance parts={obj.partsList} />
+            <Box className="panel-header-image">
+              <img
+                src={obj.description.image}
+                alt={`${obj.description.aircraft} ${obj.description.tailNumber}`}
+              />
+            </Box>
+            <Box my={1} className="panel-content">
+              <Typography variant="h5">Maintenance Checks</Typography>
+              <Box pt={1}>
+                {obj.maintenanceSchedule.map(maintenance => {
+                  return (
+                    <ProgressBar
+                      start={maintenance.lastCompletedHours}
+                      end={
+                        maintenance.lastCompletedHours + maintenance.maxHours
+                      }
+                      current={obj.flightHours}
+                      label={`${
+                        maintenance.type
+                      } Check - Last Completed: ${moment(
+                        maintenance.lastCompletedDate
+                      ).format("D MMM YYYY")}`}
+                      key={maintenance.type}
+                    />
+                  );
+                })}
+              </Box>
+            </Box>
+            <Box my={1} className="panel-content">
+              <Typography variant="h5">Parts Provenance</Typography>
+              <Box pt={1}>
+                {obj.partsList.length > 0 && (
+                  <PartProvenance parts={obj.partsList} />
+                )}
+              </Box>
+            </Box>
+            <Box my={1} className="panel-content">
+              <Typography variant="h5">Maintenance Reports</Typography>
+              {obj.maintenanceReports.length > 0 && (
+                <Box pt={1}>
+                  {obj.maintenanceReports.map((report, index) => (
+                    <MaintenanceRecordPanel report={report} key={index} />
+                  ))}
+                </Box>
               )}
             </Box>
-          </Box>
-          <Box my={1} className="panel-content">
-            <Typography variant="h5">Maintenance Reports</Typography>
-            <Box pt={1}>
-              {obj.maintenanceReports.map((report, index) => {
-                report.partsReplaced = JSON.parse(
-                  JSON.parse(report.partsReplaced)
-                );
-                return <MaintenanceRecordPanel report={report} key={index} />;
-              })}
-            </Box>
-          </Box>
-        </TabPanel>
-      ))}
+          </TabPanel>
+        );
+      })}
     </div>
   );
 };

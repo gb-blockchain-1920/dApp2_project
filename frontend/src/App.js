@@ -15,10 +15,12 @@ function App() {
   React.useEffect(() => {
     getCompanies()
       .then(res => {
+        console.log(res);
         setList(res);
         setConnected(true);
       })
       .catch(e => {
+        console.log(e);
         setConnected(false);
         setList(["air canada", "KLM", "united", "delta"]); //offline data for demo purposes
       });

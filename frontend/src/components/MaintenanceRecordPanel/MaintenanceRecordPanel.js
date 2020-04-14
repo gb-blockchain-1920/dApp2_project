@@ -17,6 +17,12 @@ import { wordCapitalization } from "../../scripts/wordManipulation.js";
 import moment from "moment";
 
 export const MaintenanceRecordPanel = ({ report }) => {
+  try {
+    report.partsReplaced = JSON.parse(report.partsReplaced);
+  } catch (e) {
+    console.log(e);
+  }
+  console.log(report);
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary
