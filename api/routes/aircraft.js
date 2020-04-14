@@ -14,10 +14,10 @@ router.get("/", async function(req, res) {
   let aircraft = [];
 
   try {
-    for (let ii = 0; ii < ids.length; i++) {
+    for (let ii = 0; ii < ids.length; ii++) {
       const aircraftData = await hyperledger.query("mychannel", "airlineMRO", [
         "getAircraft",
-        req.query.id
+        ids[ii]
       ]);
       aircraft = aircraft.push(aircraftData);
     }
