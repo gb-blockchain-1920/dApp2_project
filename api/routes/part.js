@@ -18,7 +18,7 @@ router.get("/", async function(req, res) {
         "getPart",
         ids[ii]
       ]);
-      parts = parts.push(part);
+      parts = [...parts, part];
     }
     res.send(parts);
   } catch (e) {

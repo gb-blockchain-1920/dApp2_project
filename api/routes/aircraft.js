@@ -19,7 +19,7 @@ router.get("/", async function(req, res) {
         "getAircraft",
         ids[ii]
       ]);
-      aircraft = aircraft.push(aircraftData);
+      aircraft = [...aircraft, aircraftData];
     }
     res.send(aircraft);
   } catch (e) {
