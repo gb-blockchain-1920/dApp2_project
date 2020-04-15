@@ -1,11 +1,13 @@
 import React from "react";
 import "./Login.css";
+import { Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import { LoginCard } from "../../components/LoginCard/LoginCard";
 import { TextInput } from "../../components/TextInput/TextInput";
 import { AutoCompleteText } from "../../components/AutoCompleteText/AutoCompleteText";
 import { useHistory } from "react-router-dom";
 import { getUser } from "../../scripts/hyperledger.js";
-import { wordCapitalization } from "../../scripts/wordManipulation.js"
+import { wordCapitalization } from "../../scripts/wordManipulation.js";
 
 export const Login = ({ connected, companies, userData }) => {
   const history = useHistory();
@@ -20,6 +22,8 @@ export const Login = ({ connected, companies, userData }) => {
   const [validatedPass, setValidatedPass] = React.useState("");
   const [validate, setValidate] = React.useState(false);
   const [apiCalled, setAPIcalled] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = React.useState("");
 
   React.useEffect(() => {
     setValidate(!!validatedPass && userPass.password !== validatedPass);
@@ -29,14 +33,15 @@ export const Login = ({ connected, companies, userData }) => {
     console.log("login click");
     const data = userPass;
     delete data.verified; // remove extra key value pair
-    const res = connected ? await getUser("login", data) : true;
-    console.log(res);
-    if (!res) {
-      //error logging in
-    } else {
-      userData.setInfo(res.user || {offline: true});
-      window.sessionStorage.setItem("jwt", res.jwtToken)
+    try {
+      const res = connected ? await getUser("login", data) : {user: {type: userPass.type}};
+      console.log(res);
+      userData.setInfo(res.user);
+      window.sessionStorage.setItem("jwt", res.jwtToken);
       history.push("/aircraft");
+    } catch (e) {
+      setMessage("Error signing in");
+      setOpen(true);
     }
   };
 
@@ -53,7 +58,16 @@ export const Login = ({ connected, companies, userData }) => {
       loginHandle();
     } else {
       //error registering
+      setMessage("Error registering");
+      setOpen(true);
     }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
   };
 
   const onChangeUserPass = event => {
@@ -134,6 +148,16 @@ export const Login = ({ connected, companies, userData }) => {
           }}
         />
       </LoginCard>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleClose}
+          severity="error"
+        >
+          {message}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

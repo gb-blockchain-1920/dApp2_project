@@ -14,7 +14,18 @@ export const PartProvenance = ({ parts }) => {
   const [partData, setPartData] = React.useState([]);
 
   React.useState(() => {
-    getPart(parts.join(",")).then(data => setPartData(data));
+    if (parts.join("") === "demoPart") {
+      setPartData([
+        {
+          description: { id: "demoPart", name: "Offline demo part" },
+          totalHours: 100,
+          maximumHours: 3000,
+          history: [{ tailNumber: "G-ZBJG" }]
+        }
+      ]);
+    } else {
+      getPart(parts.join(",")).then(data => setPartData(data));
+    }
   }, []);
 
   return (

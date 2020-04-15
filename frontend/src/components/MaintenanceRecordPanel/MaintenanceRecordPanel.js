@@ -19,10 +19,11 @@ import moment from "moment";
 export const MaintenanceRecordPanel = ({ report }) => {
   try {
     report.partsReplaced = JSON.parse(report.partsReplaced);
+    report.partsReplaced = JSON.parse(report.partsReplaced); //sometimes requires a second parse
   } catch (e) {
-    console.log(e);
+    // console.log(e);
   }
-  console.log(report);
+  // console.log(report);
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary

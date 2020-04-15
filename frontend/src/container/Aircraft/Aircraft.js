@@ -9,6 +9,8 @@ import moment from "moment";
 import { getAircraft } from "../../scripts/hyperledger.js";
 import { MaintenanceRecordPanel } from "../../components/MaintenanceRecordPanel/MaintenanceRecordPanel";
 import { PartProvenance } from "../../components/PartProvenance/PartProvenance";
+import { FabButton } from "../../components/FabButton/FabButton";
+import { PopUp } from "../../components/PopUp/PopUp";
 
 //from: https://material-ui.com/components/tabs/
 
@@ -69,6 +71,9 @@ export const Aircraft = ({ connected, userData }) => {
   const [value, setValue] = React.useState(0);
   const [isMobile, setIsMobile] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [open, set] = React.useState(false);
+  const popUp = {open, set};
+  const [menu, setMenu] = React.useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -115,19 +120,17 @@ export const Aircraft = ({ connected, userData }) => {
               soldDate: null
             }
           ],
-          partsList: [],
+          partsList: ["demoPart"],
           maintainers: [],
-          maintenanceReports: new Array(2).fill(
-            {
-              date: new Date(),
-              type: "General",
-              notes: "Test maintenance report",
-              partsReplaced: JSON.stringify({
-                newPart: "test part",
-                "testing part": "testing parts"
-              })
-            }
-          )
+          maintenanceReports: new Array(2).fill({
+            date: new Date(),
+            type: "General",
+            notes: "Test maintenance report",
+            partsReplaced: JSON.stringify({
+              newPart: "test part",
+              "testing part": "testing parts"
+            })
+          })
         })
       );
     } else {
@@ -162,7 +165,7 @@ export const Aircraft = ({ connected, userData }) => {
         </Tabs>
       </TabWrapper>
       {data.map((obj, index) => {
-        console.log(obj);
+        // console.log(obj);
         return (
           <TabPanel value={value} index={index} key={`aircraft${index}`}>
             <Box className="panel-header-details">
@@ -221,6 +224,8 @@ export const Aircraft = ({ connected, userData }) => {
           </TabPanel>
         );
       })}
+      <FabButton admin={userData.info.type === "administrator"} popUp={popUp} setMenu={setMenu}/>
+      <PopUp popState={popUp}/>
     </div>
   );
 };

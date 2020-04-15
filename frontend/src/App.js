@@ -31,11 +31,11 @@ function App() {
       <NavigationBar connected={connected} />
       <Switch>
         <Route path="/aircraft">
-          {Object.keys(info).length === 0 ? (
+          {/* {Object.keys(info).length === 0 ? (
             <Redirect to="/" />
-          ) : (
+          ) : ( */}
             <Aircraft connected={connected} userData={user} />
-          )}
+          {/* )} */}
         </Route>
         <Route path="/">
           <Login connected={connected} companies={companies} userData={user} />
