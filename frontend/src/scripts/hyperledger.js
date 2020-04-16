@@ -47,6 +47,15 @@ export const getPart = async id => {
   return data;
 };
 
+export const getMaintainers = async () => {
+  const res = await fetch(address + "admin", {
+    method: "GET",
+    headers: postHeader()
+  });
+  const data = await res.json();
+  return data;
+};
+
 export const callAPI = async (endpoint, method, data) => {
   const res = await fetch(address + endpoint, {
     method,
@@ -55,6 +64,5 @@ export const callAPI = async (endpoint, method, data) => {
   });
   return res.status === 200;
 };
-
 
 export default getCompanies;

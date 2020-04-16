@@ -9,18 +9,20 @@ import { TextInput } from "../TextInput/TextInput";
 import "./styles.css";
 import { wordCapitalization } from "../../scripts/wordManipulation";
 import { AutoCompleteText } from "../AutoCompleteText/AutoCompleteText";
+import { callAPI, getMaintainers } from "../../scripts/hyperledger.js";
 
-export const AssignMaintainer = ({ popState, current }) => {
+export const AssignMaintainer = ({ popState, current, trigger }) => {
   const [data, setData] = React.useState({
     tailNumber: current.description.tailNumber,
     company: current.owner.slice(-1)[0].company,
     username: ""
   });
-  const [maintainers, setMaintainers] = React.useState([])
+  const [maintainers, setMaintainers] = React.useState([]);
+  const [submitted, setSubmitted] = React.useState(false);
 
   React.useEffect(() => {
-    setMaintainers([])
-  }, [])
+    getMaintainers().then(res => setMaintainers(res));
+  }, []);
 
   const handleCancel = () => {
     setData({
@@ -31,7 +33,16 @@ export const AssignMaintainer = ({ popState, current }) => {
     popState.set(false);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    setSubmitted(true);
+    const res = await callAPI("admin", "POST", data);
+    console.log(res);
+    setSubmitted(false);
+    trigger(res);
+    if (res) {
+      handleCancel();
+    }
+  };
 
   const autocompleteOnChange = (event, handler, key, obj) => {
     let value = event.target.value;
@@ -54,8 +65,13 @@ export const AssignMaintainer = ({ popState, current }) => {
           label="Tail Number"
           id="tailNumber"
           value={data.tailNumber}
+          disabled={submitted}
         />
-        <TextInput label="Company" value={wordCapitalization(data.company)} />
+        <TextInput
+          label="Company"
+          value={wordCapitalization(data.company)}
+          disabled={submitted}
+        />
         <AutoCompleteText
           options={maintainers}
           optionLabel={maintainer => maintainer}
@@ -63,17 +79,23 @@ export const AssignMaintainer = ({ popState, current }) => {
           onInputChange={event => {
             autocompleteOnChange(event, setData, "username", maintainers);
           }}
+          disabled={submitted}
         />
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={handleCancel} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleCancel}
+          color="primary"
+          disabled={submitted}
+        >
           Cancel
         </Button>
         <Button
           variant="contained"
           onClick={handleSubmit}
           color="primary"
-          disabled={Object.values(data).some(val => !val)}
+          disabled={Object.values(data).some(val => !val) || submitted}
         >
           Submit
         </Button>

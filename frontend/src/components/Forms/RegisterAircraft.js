@@ -8,14 +8,17 @@ import {
 import { TextInput } from "../TextInput/TextInput";
 import "./styles.css";
 import { wordCapitalization } from "../../scripts/wordManipulation";
+import { callAPI } from "../../scripts/hyperledger.js";
 
-export const RegisterAircraft = ({ popState, current }) => {
+export const RegisterAircraft = ({ popState, current, trigger }) => {
   const [data, setData] = React.useState({
     aircraft: "",
     tailNumber: "",
     company: current.owner.slice(-1)[0].company,
     image: ""
   });
+  const [submitted, setSubmitted] = React.useState(false);
+
   const handleCancel = () => {
     setData({
       aircraft: "",
@@ -26,11 +29,20 @@ export const RegisterAircraft = ({ popState, current }) => {
     popState.set(false);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    setSubmitted(true);
+    const res = await callAPI("aircraft", "POST", data);
+    console.log(res);
+    setSubmitted(false);
+    trigger(res);
+    if (res) {
+      handleCancel();
+    }
+  };
 
   const handleChange = event => {
     const eventInfo = event.target;
-    console.log(event.target);
+    // console.log(event.target);
     setData(prev => {
       return { ...prev, [eventInfo.id]: eventInfo.value };
     });
@@ -48,12 +60,14 @@ export const RegisterAircraft = ({ popState, current }) => {
           id="aircraft"
           onChange={handleChange}
           value={data.aircraft}
+          disabled={submitted}
         />
         <TextInput
           label="Tail Number"
           id="tailNumber"
           onChange={handleChange}
           value={data.tailNumber}
+          disabled={submitted}
         />
         <TextInput label="Company" value={wordCapitalization(data.company)} />
         <TextInput
@@ -61,17 +75,23 @@ export const RegisterAircraft = ({ popState, current }) => {
           id="image"
           onChange={handleChange}
           value={data.image}
+          disabled={submitted}
         />
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={handleCancel} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleCancel}
+          color="primary"
+          disabled={submitted}
+        >
           Cancel
         </Button>
         <Button
           variant="contained"
           onClick={handleSubmit}
           color="primary"
-          disabled={Object.values(data).some(val => !val)}
+          disabled={Object.values(data).some(val => !val) || submitted}
         >
           Submit
         </Button>
