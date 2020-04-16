@@ -153,13 +153,13 @@ _Functions for managing data and interacting with data from outside Hyperledger_
   - [x] Basic framework
   - [x] Mobile friendly site
   - [x] Status indicator for front-end on connecting to API (see if it's still active)
-  - [ ] Administrator interactions
-  - [ ] Maintainer interactions
+  - [x] Administrator interactions
+  - [x] Maintainer interactions
   - [ ] Full system test using front-end only
-- [x] ~~Test cases for chaincode & API~~ _(too difficult for PoC)_
+- [x] ~~Test cases for chaincode & API~~ _(not implemented in PoC)_
 - [x] CI/CD
   - [x] for site deployment
-  - [ ] ~~for test cases~~ _(too difficult for PoC)_
+  - [x] ~~for test cases~~ _(not implemented in PoC)_
 
 ## Notes
 
