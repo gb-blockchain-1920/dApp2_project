@@ -1,0 +1,42 @@
+.fab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  position:absolute;
+  bottom: 2%;
+  right: 2%;
+}
+
+.extended-icon {
+  margin-right: 0.5rem;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.option {
+  transform: translateX(105%);
+  transition: transform .5s ease;
+}
+
+.show {
+  transform: translateX(0);
+}
+
+.button-main {
+  transform: rotate(0deg) !important;
+  transition: transform 0.5s ease-out !important;
+}
+
+.open {
+  transform: rotate(135deg) !important;
+}
