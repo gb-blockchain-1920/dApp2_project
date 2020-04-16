@@ -18,6 +18,7 @@ router.get("/", async function(req, res) {
         "getPart",
         ids[ii]
       ]);
+      await new Promise(r => setTimeout(r, 500));
       parts = [...parts, part];
     }
     res.send(parts);

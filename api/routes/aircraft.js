@@ -19,7 +19,7 @@ router.get("/", async function(req, res) {
         "getAircraft",
         ids[ii]
       ]);
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 500));
       aircraft = [...aircraft, aircraftData];
     }
     res.send(aircraft);
