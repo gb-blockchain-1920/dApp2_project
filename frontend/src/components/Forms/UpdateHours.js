@@ -11,13 +11,13 @@ import "./styles.css";
 export const UpdateHours = ({ popState, current }) => {
   const [data, setData] = React.useState({
     tailNumber: current.description.tailNumber,
-    hours: 0,
+    hours: 0
   });
   const handleCancel = () => {
     setData({
       tailNumber: "",
-      hours: 0,
-    })
+      hours: 0
+    });
     popState.set(false);
   };
 
@@ -25,9 +25,12 @@ export const UpdateHours = ({ popState, current }) => {
 
   const handleChange = event => {
     const eventInfo = event.target;
-    console.log(event.target);
+    const output =
+      Number(eventInfo.value) < 0 && eventInfo.value !== ""
+        ? 0
+        : eventInfo.value;
     setData(prev => {
-      return { ...prev, [eventInfo.id]: eventInfo.value };
+      return { ...prev, [eventInfo.id]: output };
     });
   };
 
@@ -54,7 +57,12 @@ export const UpdateHours = ({ popState, current }) => {
         <Button variant="contained" onClick={handleCancel} color="primary">
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleSubmit} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          color="primary"
+          disabled={Object.values(data).some(val => !val)}
+        >
           Submit
         </Button>
       </DialogActions>

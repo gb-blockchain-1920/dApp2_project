@@ -4,3 +4,19 @@
   align-items: center;
   justify-content: center;
 }
+
+.textArea {
+  width: 19.5rem;
+  max-width: 100%;
+  background-color: inherit;
+  color: inherit;
+  border-radius: 0.2rem;
+}
+
+.table-container {
+  max-height: 10rem;
+}
+
+.part-input-box {
+  max-width: 8rem;
+}

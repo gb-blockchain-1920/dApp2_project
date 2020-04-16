@@ -34,7 +34,7 @@ function App() {
           {Object.keys(info).length === 0 ? (
             <Redirect to="/" />
           ) : (
-            <Aircraft connected={connected} userData={user} />
+            <Aircraft connected={connected} userData={user} companies={companies}/>
           )}
         </Route>
         <Route path="/">

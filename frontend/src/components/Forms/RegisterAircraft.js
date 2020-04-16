@@ -22,7 +22,7 @@ export const RegisterAircraft = ({ popState, current }) => {
       tailNumber: "",
       company: "",
       image: ""
-    })
+    });
     popState.set(false);
   };
 
@@ -55,10 +55,7 @@ export const RegisterAircraft = ({ popState, current }) => {
           onChange={handleChange}
           value={data.tailNumber}
         />
-        <TextInput
-          label="Company"
-          value={wordCapitalization(data.company)}
-        />
+        <TextInput label="Company" value={wordCapitalization(data.company)} />
         <TextInput
           label="Image URL"
           id="image"
@@ -70,7 +67,12 @@ export const RegisterAircraft = ({ popState, current }) => {
         <Button variant="contained" onClick={handleCancel} color="primary">
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleSubmit} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          color="primary"
+          disabled={Object.values(data).some(val => !val)}
+        >
           Submit
         </Button>
       </DialogActions>

@@ -19,7 +19,7 @@ export const NewPart = ({ popState, current }) => {
       id: "",
       name: "",
       maximumHours: 0
-    })
+    });
     popState.set(false);
   };
 
@@ -27,7 +27,12 @@ export const NewPart = ({ popState, current }) => {
 
   const handleChange = event => {
     const eventInfo = event.target;
-    console.log(event.target);
+    eventInfo.value =
+      eventInfo.id === "maximumHours" &&
+      Number(eventInfo.value) < 0 &&
+      eventInfo.value !== ""
+        ? 0
+        : eventInfo.value;
     setData(prev => {
       return { ...prev, [eventInfo.id]: eventInfo.value };
     });
@@ -37,8 +42,8 @@ export const NewPart = ({ popState, current }) => {
     <React.Fragment>
       <DialogContent className="form-box">
         <DialogContentText>
-          Register a new part to be tracked in the Hyperledger Fabric
-          blockchain network.
+          Register a new part to be tracked in the Hyperledger Fabric blockchain
+          network.
         </DialogContentText>
         <TextInput
           label="Part ID"
@@ -64,7 +69,12 @@ export const NewPart = ({ popState, current }) => {
         <Button variant="contained" onClick={handleCancel} color="primary">
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleSubmit} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          color="primary"
+          disabled={Object.values(data).some(val => !val)}
+        >
           Submit
         </Button>
       </DialogActions>

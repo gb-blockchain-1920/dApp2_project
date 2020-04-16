@@ -81,7 +81,7 @@ const menuComponent = {
   UpdateHours
 };
 
-export const Aircraft = ({ connected, userData }) => {
+export const Aircraft = ({ connected, userData, companies }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [isMobile, setIsMobile] = React.useState(false);
@@ -247,7 +247,7 @@ export const Aircraft = ({ connected, userData }) => {
         setMenu={setMenu}
       />
       <PopUp popState={popUp} title={menu}>
-        {menu && <MenuComponent popState={popUp} current={data[value]} />}
+        {menu && <MenuComponent popState={popUp} current={data[value]} companies={companies}/>}
       </PopUp>
     </div>
   );
