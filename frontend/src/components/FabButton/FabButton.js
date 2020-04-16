@@ -51,7 +51,7 @@ export const FabButton = ({ popUp, admin, setMenu }) => {
           const clickHandle = () => {
             popUp.set(true);
             closeHandle({ relatedTarget: null });
-            setMenu(option.label.split(" ").join(""))
+            setMenu(option.label)
           };
           return (
             <Box

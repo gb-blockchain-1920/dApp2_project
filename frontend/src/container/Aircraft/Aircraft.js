@@ -11,6 +11,12 @@ import { MaintenanceRecordPanel } from "../../components/MaintenanceRecordPanel/
 import { PartProvenance } from "../../components/PartProvenance/PartProvenance";
 import { FabButton } from "../../components/FabButton/FabButton";
 import { PopUp } from "../../components/PopUp/PopUp";
+import { RegisterAircraft } from "../../components/Forms/RegisterAircraft";
+import { AssignMaintainer } from "../../components/Forms/AssignMaintainer";
+import { NewPart } from "../../components/Forms/NewPart";
+import { ReportMaintenance } from "../../components/Forms/ReportMaintenance";
+import { SellAircraft } from "../../components/Forms/SellAircraft";
+import { UpdateHours } from "../../components/Forms/UpdateHours";
 
 //from: https://material-ui.com/components/tabs/
 
@@ -66,13 +72,22 @@ const TabWrapper = ({ condition, children }) =>
     </AppBar>
   );
 
+const menuComponent = {
+  AssignMaintainer,
+  ReportMaintenance,
+  NewPart,
+  RegisterAircraft,
+  SellAircraft,
+  UpdateHours
+};
+
 export const Aircraft = ({ connected, userData }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [isMobile, setIsMobile] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [open, set] = React.useState(false);
-  const popUp = {open, set};
+  const popUp = { open, set };
   const [menu, setMenu] = React.useState("");
 
   const handleChange = (event, newValue) => {
@@ -140,6 +155,8 @@ export const Aircraft = ({ connected, userData }) => {
       });
     }
   }, [connected, userData.info.aircraft]);
+
+  const MenuComponent = menuComponent[menu.split(" ").join("")]
 
   return (
     <div
@@ -224,8 +241,14 @@ export const Aircraft = ({ connected, userData }) => {
           </TabPanel>
         );
       })}
-      <FabButton admin={userData.info.type === "administrator"} popUp={popUp} setMenu={setMenu}/>
-      <PopUp popState={popUp}/>
+      <FabButton
+        admin={userData.info.type === "administrator"}
+        popUp={popUp}
+        setMenu={setMenu}
+      />
+      <PopUp popState={popUp} title={menu}>
+        {menu && <MenuComponent popState={popUp} current={data[value]} />}
+      </PopUp>
     </div>
   );
 };
