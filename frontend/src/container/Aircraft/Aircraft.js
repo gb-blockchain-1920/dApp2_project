@@ -1,7 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import { Tabs, Tab, Typography, Box, AppBar } from "@material-ui/core";
+import {
+  Tabs,
+  Tab,
+  Typography,
+  Box,
+  AppBar,
+  Snackbar
+} from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import { ProgressBar } from "../../components/ProgressBar/ProgressBar";
 import "./Aircraft.css";
 import { wordCapitalization } from "../../scripts/wordManipulation.js";
@@ -81,7 +89,7 @@ const menuComponent = {
   UpdateHours
 };
 
-export const Aircraft = ({ connected, userData }) => {
+export const Aircraft = ({ connected, userData, companies }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [isMobile, setIsMobile] = React.useState(false);
@@ -89,9 +97,24 @@ export const Aircraft = ({ connected, userData }) => {
   const [open, set] = React.useState(false);
   const popUp = { open, set };
   const [menu, setMenu] = React.useState("");
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [transaction, setTransaction] = React.useState(null);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+    setTimeout(() => setTransaction(null), 100); //reset transaction status after a few seconds
+  };
+
+  const transactionResponse = res => {
+    setSnackbarOpen(true);
+    setTransaction(res);
   };
 
   React.useEffect(() => {
@@ -156,7 +179,7 @@ export const Aircraft = ({ connected, userData }) => {
     }
   }, [connected, userData.info.aircraft]);
 
-  const MenuComponent = menuComponent[menu.split(" ").join("")]
+  const MenuComponent = menuComponent[menu.split(" ").join("")];
 
   return (
     <div
@@ -247,8 +270,29 @@ export const Aircraft = ({ connected, userData }) => {
         setMenu={setMenu}
       />
       <PopUp popState={popUp} title={menu}>
-        {menu && <MenuComponent popState={popUp} current={data[value]} />}
+        {menu && (
+          <MenuComponent
+            popState={popUp}
+            current={data[value]}
+            companies={companies}
+            trigger={transactionResponse}
+          />
+        )}
       </PopUp>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleClose}
+          severity={transaction ? "success" : "error"}
+        >
+          {transaction ? "Transaction successful" : "Transaction failed"}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

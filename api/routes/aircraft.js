@@ -19,6 +19,7 @@ router.get("/", async function(req, res) {
         "getAircraft",
         ids[ii]
       ]);
+      await new Promise(r => setTimeout(r, 500)); //delay because error would occur when hyperledger is queried too quickly
       aircraft = [...aircraft, aircraftData];
     }
     res.send(aircraft);

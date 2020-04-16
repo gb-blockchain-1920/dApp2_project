@@ -7,27 +7,41 @@ import {
 } from "@material-ui/core";
 import { TextInput } from "../TextInput/TextInput";
 import "./styles.css";
+import { callAPI } from "../../scripts/hyperledger.js";
 
-export const UpdateHours = ({ popState, current }) => {
+export const UpdateHours = ({ popState, current, trigger }) => {
   const [data, setData] = React.useState({
     tailNumber: current.description.tailNumber,
-    hours: 0,
+    hours: ""
   });
+  const [submitted, setSubmitted] = React.useState(false);
   const handleCancel = () => {
     setData({
       tailNumber: "",
-      hours: 0,
-    })
+      hours: ""
+    });
     popState.set(false);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    setSubmitted(true);
+    const res = await callAPI("flight", "POST", data);
+    console.log(res);
+    setSubmitted(false);
+    trigger(res);
+    if (res) {
+      handleCancel();
+    }
+  };
 
   const handleChange = event => {
     const eventInfo = event.target;
-    console.log(event.target);
+    const output =
+      Number(eventInfo.value) < 0 && eventInfo.value !== ""
+        ? 0
+        : eventInfo.value;
     setData(prev => {
-      return { ...prev, [eventInfo.id]: eventInfo.value };
+      return { ...prev, [eventInfo.id]: output };
     });
   };
 
@@ -41,6 +55,7 @@ export const UpdateHours = ({ popState, current }) => {
           label="Tail Number"
           id="tailNumber"
           value={data.tailNumber}
+          disabled={submitted}
         />
         <TextInput
           type="number"
@@ -48,13 +63,24 @@ export const UpdateHours = ({ popState, current }) => {
           value={data.hours}
           id="hours"
           onChange={handleChange}
+          disabled={submitted}
         />
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={handleCancel} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleCancel}
+          color="primary"
+          disabled={submitted}
+        >
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleSubmit} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          color="primary"
+          disabled={data.hours <= 0 || Object.values(data).some(val => !val) || submitted}
+        >
           Submit
         </Button>
       </DialogActions>

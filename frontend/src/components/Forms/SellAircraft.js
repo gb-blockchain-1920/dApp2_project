@@ -7,27 +7,47 @@ import {
 } from "@material-ui/core";
 import { TextInput } from "../TextInput/TextInput";
 import "./styles.css";
+import { AutoCompleteText } from "../AutoCompleteText/AutoCompleteText";
+import { wordCapitalization } from "../../scripts/wordManipulation.js";
+import { callAPI } from "../../scripts/hyperledger.js";
 
-export const SellAircraft = ({ popState, current }) => {
+export const SellAircraft = ({ popState, current, companies, trigger }) => {
   const [data, setData] = React.useState({
     tailNumber: current.description.tailNumber,
-    company: "",
+    company: ""
   });
+  const [submitted, setSubmitted] = React.useState(false);
   const handleCancel = () => {
     setData({
       tailNumber: "",
-      company: "",
-    })
+      company: ""
+    });
     popState.set(false);
   };
 
-  const handleSubmit = () => {};
+  const companyList = companies.list.filter(
+    company => company !== current.owner.slice(-1)[0].company
+  );
 
-  const handleChange = event => {
-    const eventInfo = event.target;
-    console.log(event.target);
-    setData(prev => {
-      return { ...prev, [eventInfo.id]: eventInfo.value };
+  const handleSubmit = async () => {
+    setSubmitted(true);
+    const res = await callAPI("admin", "PATCH", data);
+    console.log(res);
+    setSubmitted(false);
+    trigger(res);
+    if (res) {
+      handleCancel();
+    }
+  };
+
+  const autocompleteOnChange = (event, handler, key, obj) => {
+    let value = event.target.value;
+    // console.log(value);
+    if (typeof value === "number") {
+      value = event.target.innerText.toLowerCase();
+    }
+    handler(prev => {
+      return { ...prev, [key]: value || "" };
     });
   };
 
@@ -41,19 +61,33 @@ export const SellAircraft = ({ popState, current }) => {
           label="Tail Number"
           id="tailNumber"
           value={data.tailNumber}
+          disabled={submitted}
         />
-        <TextInput
+        <AutoCompleteText
+          options={companyList}
+          optionLabel={wordCapitalization}
           label="Company"
-          value={data.company}
-          id="company"
-          onChange={handleChange}
+          onInputChange={event => {
+            autocompleteOnChange(event, setData, "company", companyList);
+          }}
+          disabled={submitted}
         />
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={handleCancel} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleCancel}
+          color="primary"
+          disabled={submitted}
+        >
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleSubmit} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          color="primary"
+          disabled={Object.values(data).some(val => !val) || submitted}
+        >
           Submit
         </Button>
       </DialogActions>
