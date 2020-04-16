@@ -100,7 +100,7 @@ export const ReportMaintenance = ({ popState, current, trigger }) => {
     let value = event.target.value;
     // console.log(value);
     if (typeof value === "number") {
-      value = event.target.innerText.toLowerCase();
+      value = event.target.innerText;
     }
     handler(prev => {
       return { ...prev, [key]: value || "" };

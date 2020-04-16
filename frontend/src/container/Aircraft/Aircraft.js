@@ -99,7 +99,6 @@ export const Aircraft = ({ connected, userData, companies }) => {
   const [menu, setMenu] = React.useState("");
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [transaction, setTransaction] = React.useState(null);
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -110,17 +109,13 @@ export const Aircraft = ({ connected, userData, companies }) => {
       return;
     }
     setSnackbarOpen(false);
-    setShowSnackbar(false); //prevent snackbar from displaying when transaction state is reset
-    setTimeout(() => setTransaction(null), 0); //reset transaction status after a few seconds
+    setTimeout(() => setTransaction(null), 100); //reset transaction status after a few seconds
   };
 
-  React.useEffect(() => {
-    if (showSnackbar) {
-      setSnackbarOpen(true);
-    } else {
-      setShowSnackbar(true); //don't display snackbar on first render
-    }
-  }, [transaction]);
+  const transactionResponse = res => {
+    setSnackbarOpen(true);
+    setTransaction(res);
+  };
 
   React.useEffect(() => {
     function handleResize() {
@@ -280,7 +275,7 @@ export const Aircraft = ({ connected, userData, companies }) => {
             popState={popUp}
             current={data[value]}
             companies={companies}
-            trigger={setTransaction}
+            trigger={transactionResponse}
           />
         )}
       </PopUp>
