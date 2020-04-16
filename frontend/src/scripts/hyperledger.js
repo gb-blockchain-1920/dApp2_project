@@ -47,13 +47,14 @@ export const getPart = async id => {
   return data;
 };
 
-export const updateHours = async data => {
-  const res = await fetch(address + "flight", {
-    method: "POST",
+export const callAPI = async (endpoint, method, data) => {
+  const res = await fetch(address + endpoint, {
+    method,
     headers: postHeader(),
     body: JSON.stringify(data)
   });
   return res.status === 200;
 };
+
 
 export default getCompanies;

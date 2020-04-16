@@ -19,9 +19,10 @@ import { TextInput } from "../TextInput/TextInput";
 import "./styles.css";
 import { AutoCompleteText } from "../AutoCompleteText/AutoCompleteText";
 import { wordCapitalization } from "../../scripts/wordManipulation.js";
+import { callAPI } from "../../scripts/hyperledger.js";
 const crypto = require("crypto");
 
-export const ReportMaintenance = ({ popState, current }) => {
+export const ReportMaintenance = ({ popState, current, trigger }) => {
   const [data, setData] = React.useState({
     tailNumber: current.description.tailNumber,
     type: "",
@@ -29,6 +30,7 @@ export const ReportMaintenance = ({ popState, current }) => {
   });
   const types = ["general", "A", "B", "C", "D"];
   const [partData, setPartData] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
 
   React.useEffect(() => {
     let temp = {};
@@ -50,6 +52,28 @@ export const ReportMaintenance = ({ popState, current }) => {
     updateParts(temp);
   };
 
+  const handleSubmit = async () => {
+    const filteredParts = partData;
+    //remove key-value pairs of unchanged parts
+    Object.keys(filteredParts).forEach(part => {
+      if (partData[part] === "") {
+        delete filteredParts[part];
+      }
+    });
+    const obj = {
+      ...data,
+      replacedParts: filteredParts
+    };
+    setSubmitted(true);
+    const res = await callAPI("aircraft", "PATCH", obj);
+    console.log(res);
+    setSubmitted(false);
+    trigger(res);
+    if (res) {
+      handleCancel();
+    }
+  };
+
   const handleCancel = () => {
     setData({
       tailNumber: "",
@@ -58,8 +82,6 @@ export const ReportMaintenance = ({ popState, current }) => {
     });
     popState.set(false);
   };
-
-  const handleSubmit = () => {};
 
   const handleChange = event => {
     const eventInfo = event.target;
@@ -95,6 +117,7 @@ export const ReportMaintenance = ({ popState, current }) => {
           label="Tail Number"
           id="tailNumber"
           value={data.tailNumber}
+          disabled={submitted}
         />
         <AutoCompleteText
           options={types}
@@ -103,6 +126,7 @@ export const ReportMaintenance = ({ popState, current }) => {
           onInputChange={event => {
             autocompleteOnChange(event, setData, "type", types);
           }}
+          disabled={submitted}
         />
         <TextareaAutosize
           placeholder="Notes"
@@ -111,6 +135,7 @@ export const ReportMaintenance = ({ popState, current }) => {
           id="notes"
           onChange={handleChange}
           className="textArea"
+          disabled={submitted}
         />
         <Box my={1} className="textArea">
           <TableContainer className="table-container">
@@ -134,6 +159,7 @@ export const ReportMaintenance = ({ popState, current }) => {
                           id={oldPart}
                           value={partData[oldPart]}
                           onChange={handlePartChange}
+                          disabled={submitted}
                         />
                       </Box>
                     </TableCell>
@@ -143,19 +169,29 @@ export const ReportMaintenance = ({ popState, current }) => {
             </Table>
           </TableContainer>
         </Box>
-        <Button variant="outlined" onClick={newPart} startIcon={<AddIcon />}>
+        <Button
+          variant="outlined"
+          onClick={newPart}
+          startIcon={<AddIcon />}
+          disabled={submitted}
+        >
           Add Item
         </Button>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={handleCancel} color="primary">
+        <Button
+          variant="contained"
+          onClick={handleCancel}
+          color="primary"
+          disabled={submitted}
+        >
           Cancel
         </Button>
         <Button
           variant="contained"
           onClick={handleSubmit}
           color="primary"
-          disabled={Object.values(data).some(val => !val)}
+          disabled={Object.values(data).some(val => !val) || submitted}
         >
           Submit
         </Button>

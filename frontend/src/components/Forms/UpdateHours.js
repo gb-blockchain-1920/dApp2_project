@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import { TextInput } from "../TextInput/TextInput";
 import "./styles.css";
-import { updateHours } from "../../scripts/hyperledger.js";
+import { callAPI } from "../../scripts/hyperledger.js";
 
 export const UpdateHours = ({ popState, current, trigger }) => {
   const [data, setData] = React.useState({
@@ -25,7 +25,7 @@ export const UpdateHours = ({ popState, current, trigger }) => {
 
   const handleSubmit = async () => {
     setSubmitted(true);
-    const res = await updateHours(data);
+    const res = await callAPI("flight", "POST", data);
     console.log(res);
     setSubmitted(false);
     trigger(res);
