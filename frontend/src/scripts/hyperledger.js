@@ -7,10 +7,10 @@ const getToken = () => {
 
 const postHeader = () => {
   return {
-    "Content-Type" : "application/json",
-    "Authorization": `Bearer ${getToken()}`
-  }
-}
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${getToken()}`
+  };
+};
 
 export const getCompanies = async () => {
   const res = await fetch(address);
@@ -47,13 +47,13 @@ export const getPart = async id => {
   return data;
 };
 
-export const updateHours = async (tailNumber, hours) => {
-  const data = { tailNumber, hours };
-  await fetch(address+'flight', {
+export const updateHours = async data => {
+  const res = await fetch(address + "flight", {
     method: "POST",
     headers: postHeader(),
     body: JSON.stringify(data)
-  })
+  });
+  return res.status === 200;
 };
 
 export default getCompanies;
