@@ -10,10 +10,10 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { getPart } from "../../scripts/hyperledger.js";
 import { ProgressBar } from "../../components/ProgressBar/ProgressBar";
 
-export const PartProvenance = ({ parts }) => {
+export const PartProvenance = ({ parts, refresh }) => {
   const [partData, setPartData] = React.useState([]);
 
-  React.useState(() => {
+  React.useEffect(() => {
     if (parts.join("") === "demoPart") {
       setPartData([
         {
@@ -26,11 +26,11 @@ export const PartProvenance = ({ parts }) => {
     } else {
       getPart(parts.join(",")).then(data => setPartData(data));
     }
-  }, []);
+  }, [parts, refresh]);
 
   return (
     <React.Fragment>
-      {partData.map((partData, index) => (
+      {partData.length > 0 && partData.map((partData, index) => (
         <ExpansionPanel key={index}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}

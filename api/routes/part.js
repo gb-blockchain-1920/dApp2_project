@@ -52,7 +52,9 @@ router.post("/", async function(req, res) {
     return res.sendStatus(400);
   }
 
+
   try {
+    req.body.maximumHours = Number(req.body.maximumHours); //make sure in number form
     await hyperledger.invoke("mychannel", "airlineMRO", [
       "newPart",
       JSON.stringify(req.body)
