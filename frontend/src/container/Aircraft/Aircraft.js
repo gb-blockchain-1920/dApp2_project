@@ -105,22 +105,25 @@ export const Aircraft = ({ connected, userData, companies }) => {
     setValue(newValue);
   };
 
+  //handle snackbar close
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setSnackbarOpen(false);
-    if (transaction) {
-      setRefresh(prev => !prev);
-    }
+    setSnackbarOpen(false); //close snackbar
     setTimeout(() => setTransaction(null), 100); //reset transaction status after a few seconds
   };
 
+  //called when api call is returned
   const transactionResponse = res => {
-    setSnackbarOpen(true);
-    setTransaction(res);
+    setSnackbarOpen(true); //open snackbar
+    setTransaction(res); //set transaction status
+    if (res) { //if transaction is successful, force refresh data
+      setRefresh(prev => !prev);
+    }
   };
 
+  //window size listener
   React.useEffect(() => {
     function handleResize() {
       if (window.innerWidth <= 600 && !isMobile) {
@@ -136,6 +139,7 @@ export const Aircraft = ({ connected, userData, companies }) => {
     };
   }, [isMobile]);
 
+  //getting data depending on connected or not (offline data)
   React.useEffect(() => {
     if (!connected) {
       const maintTypes = ["A", "B", "C", "D"];
@@ -188,6 +192,7 @@ export const Aircraft = ({ connected, userData, companies }) => {
     }
   }, [connected, userData.info.aircraft, refresh]);
 
+  //popup menu component (get from object)
   const MenuComponent = menuComponent[menu.split(" ").join("")];
 
   return (

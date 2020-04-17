@@ -25,26 +25,30 @@ export const Login = ({ connected, companies, userData }) => {
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
 
+  //on password change, check validation
   React.useEffect(() => {
     setValidate(!!validatedPass && userPass.password !== validatedPass);
   }, [userPass.password, validatedPass]);
 
+  //function for handling login procedures
   const loginHandle = async () => {
     console.log("login click");
     const data = userPass;
     delete data.verified; // remove extra key value pair
     try {
-      const res = connected ? await getUser("login", data) : {user: {type: userPass.type}};
+      const res = connected ? await getUser("login", data) : {user: {type: userPass.type}}; //offline response depending on connected
       console.log(res);
       userData.setInfo(res.user);
       window.sessionStorage.setItem("jwt", res.jwtToken);
       history.push("/aircraft");
     } catch (e) {
+      //display error message
       setMessage("Error signing in");
       setOpen(true);
     }
   };
 
+  //function for handling register procedures
   const registerHandle = async () => {
     console.log("register click");
     setAPIcalled(true);
@@ -63,6 +67,7 @@ export const Login = ({ connected, companies, userData }) => {
     }
   };
 
+  //handle closing of snackbar
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -70,6 +75,7 @@ export const Login = ({ connected, companies, userData }) => {
     setOpen(false);
   };
 
+  //handle form inputs
   const onChangeUserPass = event => {
     const key = event.target.id;
     const value = event.target.value;
@@ -78,6 +84,7 @@ export const Login = ({ connected, companies, userData }) => {
     });
   };
 
+  //handle autocomplete form sections
   const autocompleteOnChange = (event, handler, key, obj) => {
     let value = event.target.value;
     // console.log(value);

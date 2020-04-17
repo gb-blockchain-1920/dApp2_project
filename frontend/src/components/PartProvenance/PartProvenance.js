@@ -39,7 +39,7 @@ export const PartProvenance = ({ parts, refresh }) => {
           >
             {partData.description && (
               <React.Fragment>
-                <Typography>{partData.description.id}</Typography>
+                <div className="div-spacing"><Typography>{partData.description.id}</Typography></div>
                 <Typography className="expansion-secondLabel">
                   {partData.description.name}
                 </Typography>
