@@ -25,7 +25,7 @@ cd
 git clone https://github.com/aalu1418/dApp2_project
 cp -R ./dApp2_project/chaincode/. ./fabric-samples/chaincode/airlineMRO
 cd ./fabric-samples/chaincode
-mv ./eKYC/start_airlineMRO.sh ../fabcar
+mv ./airlineMRO/start_airlineMRO.sh ../fabcar
 ```
 If necessary change the permissions on the `start_airlineMRO.sh` script and run
 ```
