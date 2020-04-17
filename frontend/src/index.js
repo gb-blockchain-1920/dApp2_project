@@ -21,6 +21,11 @@ const darkTheme = createMuiTheme({
           color: "white"
         }
       }
+    },
+    MuiTooltip: {
+      tooltip: {
+        fontSize: "1em",
+      }
     }
   }
 });

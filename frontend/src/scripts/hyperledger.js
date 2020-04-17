@@ -12,15 +12,29 @@ const postHeader = () => {
   };
 };
 
+const maxAttempts = 3;
+
+const fetchLoop = async (endpoint, info = {}) => {
+  let res;
+  for (let i = 0; i < maxAttempts; i++) {
+    res = await fetch(endpoint, info);
+    if (res.status === 200) {
+      break;
+    }
+    await new Promise(r => setTimeout(r, 1000)); //delay
+  }
+  return res;
+};
+
 export const getCompanies = async () => {
-  const res = await fetch(address);
+  const res = await fetchLoop(address);
   const data = await res.json();
   return data;
 };
 
 export const getUser = async (postType, params) => {
   params.postType = postType;
-  const res = await fetch(address + "login", {
+  const res = await fetchLoop(address + "login", {
     method: "POST",
     headers: postHeader(),
     body: JSON.stringify(params)
@@ -36,33 +50,49 @@ export const getUser = async (postType, params) => {
 };
 
 export const getAircraft = async id => {
-  const res = await fetch(address + `aircraft?id=${id}`);
-  const data = await res.json();
-  return data;
+  try {
+    const res = await fetchLoop(address + `aircraft?id=${id}`);
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const getPart = async id => {
-  const res = await fetch(address + `part?id=${id}`);
-  const data = await res.json();
-  return data;
+  try {
+    const res = await fetchLoop(address + `part?id=${id}`);
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const getMaintainers = async () => {
-  const res = await fetch(address + "admin", {
-    method: "GET",
-    headers: postHeader()
-  });
-  const data = await res.json();
-  return data;
+  try {
+    const res = await fetchLoop(address + "admin", {
+      method: "GET",
+      headers: postHeader()
+    });
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const callAPI = async (endpoint, method, data) => {
-  const res = await fetch(address + endpoint, {
-    method,
-    headers: postHeader(),
-    body: JSON.stringify(data)
-  });
-  return res.status === 200;
+  try {
+    const res = await fetchLoop(address + endpoint, {
+      method,
+      headers: postHeader(),
+      body: JSON.stringify(data)
+    });
+    return res.status === 200;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export default getCompanies;

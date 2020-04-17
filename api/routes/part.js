@@ -18,7 +18,7 @@ router.get("/", async function(req, res) {
         "getPart",
         ids[ii]
       ]);
-      await new Promise(r => setTimeout(r, 500)); //delay because error would occur when hyperledger is queried too quickly
+      await new Promise(r => setTimeout(r, 750)); //delay because error would occur when hyperledger is queried too quickly
       parts = [...parts, part];
     }
     res.send(parts);
@@ -52,7 +52,9 @@ router.post("/", async function(req, res) {
     return res.sendStatus(400);
   }
 
+
   try {
+    req.body.maximumHours = Number(req.body.maximumHours); //make sure in number form
     await hyperledger.invoke("mychannel", "airlineMRO", [
       "newPart",
       JSON.stringify(req.body)

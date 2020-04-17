@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, LinearProgress, Typography } from "@material-ui/core";
+import { Box, LinearProgress, Tooltip } from "@material-ui/core";
 import "./ProgressBar.css";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
@@ -15,23 +15,29 @@ export const ProgressBar = ({ start, end, current, label }) => {
   return (
     <Box className="bar-container">
       <Box pr={2} className="bar-label">
-        <Typography>{label}</Typography>
+        {label}
       </Box>
-      <CheckCircleIcon
-        color={value < 75 ? "primary" : "secondary"}
-        fontSize="large"
-      />
-      <LinearProgress
-        color={value < 75 ? "primary" : "secondary"}
-        variant="determinate"
-        value={value}
-        classes={{ root: "bar-indicator" }}
-      />
-      {value < 95 ? (
-        <ErrorOutlineIcon color="disabled" fontSize="large" />
-      ) : (
-        <ErrorIcon color="secondary" fontSize="large" />
-      )}
+      <Tooltip arrow={true} title={start}>
+        <CheckCircleIcon
+          color={value < 75 ? "primary" : "secondary"}
+          fontSize="large"
+        />
+      </Tooltip>
+      <Tooltip arrow={true} title={current}>
+        <LinearProgress
+          color={value < 75 ? "primary" : "secondary"}
+          variant="determinate"
+          value={value}
+          classes={{ root: "bar-indicator" }}
+        />
+      </Tooltip>
+      <Tooltip arrow={true} title={end}>
+        {value < 95 ? (
+          <ErrorOutlineIcon color="disabled" fontSize="large" />
+        ) : (
+          <ErrorIcon color="secondary" fontSize="large" />
+        )}
+      </Tooltip>
     </Box>
   );
 };

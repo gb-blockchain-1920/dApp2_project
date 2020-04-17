@@ -7,8 +7,11 @@ import {
   Typography,
   Box,
   AppBar,
-  Snackbar
+  Snackbar,
+  CircularProgress,
+  IconButton
 } from "@material-ui/core";
+import RefreshIcon from "@material-ui/icons/Refresh";
 import MuiAlert from "@material-ui/lab/Alert";
 import { ProgressBar } from "../../components/ProgressBar/ProgressBar";
 import "./Aircraft.css";
@@ -25,6 +28,7 @@ import { NewPart } from "../../components/Forms/NewPart";
 import { ReportMaintenance } from "../../components/Forms/ReportMaintenance";
 import { SellAircraft } from "../../components/Forms/SellAircraft";
 import { UpdateHours } from "../../components/Forms/UpdateHours";
+import { HistoryTable } from "../../components/HistoryTable/HistoryTable";
 
 //from: https://material-ui.com/components/tabs/
 
@@ -99,24 +103,33 @@ export const Aircraft = ({ connected, userData, companies }) => {
   const [menu, setMenu] = React.useState("");
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [transaction, setTransaction] = React.useState(null);
+  const [refresh, setRefresh] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  //handle snackbar close
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setSnackbarOpen(false);
+    setSnackbarOpen(false); //close snackbar
     setTimeout(() => setTransaction(null), 100); //reset transaction status after a few seconds
   };
 
+  //called when api call is returned
   const transactionResponse = res => {
-    setSnackbarOpen(true);
-    setTransaction(res);
+    setSnackbarOpen(true); //open snackbar
+    setTransaction(res); //set transaction status
+    if (res) {
+      //if transaction is successful, force refresh data
+      setRefresh(prev => !prev);
+    }
   };
 
+  //window size listener
   React.useEffect(() => {
     function handleResize() {
       if (window.innerWidth <= 600 && !isMobile) {
@@ -132,6 +145,7 @@ export const Aircraft = ({ connected, userData, companies }) => {
     };
   }, [isMobile]);
 
+  //getting data depending on connected or not (offline data)
   React.useEffect(() => {
     if (!connected) {
       const maintTypes = ["A", "B", "C", "D"];
@@ -172,13 +186,21 @@ export const Aircraft = ({ connected, userData, companies }) => {
         })
       );
     } else {
-      getAircraft(userData.info.aircraft.join(",")).then(res => {
-        setData(res);
-        console.log(res);
-      });
+      setLoading(true);
+      getAircraft(userData.info.aircraft.join(","))
+        .then(res => {
+          setData(res);
+          console.log(res);
+          setLoading(false);
+        })
+        .catch(e => {
+          console.log(e);
+          setData([]);
+        });
     }
-  }, [connected, userData.info.aircraft]);
+  }, [connected, userData.info.aircraft, refresh]);
 
+  //popup menu component (get from object)
   const MenuComponent = menuComponent[menu.split(" ").join("")];
 
   return (
@@ -195,75 +217,100 @@ export const Aircraft = ({ connected, userData, companies }) => {
           onChange={handleChange}
           className={classes.tabs}
         >
-          {data.map((obj, index) => (
-            <Tab
-              label={obj.description.tailNumber}
-              key={`plane${index}`}
-              {...a11yProps(index)}
-            />
-          ))}
+          {data !== undefined &&
+            data.map((obj, index) => (
+              <Tab
+                label={obj.description.tailNumber}
+                key={`plane${index}`}
+                {...a11yProps(index)}
+              />
+            ))}
         </Tabs>
       </TabWrapper>
-      {data.map((obj, index) => {
-        // console.log(obj);
-        return (
-          <TabPanel value={value} index={index} key={`aircraft${index}`}>
-            <Box className="panel-header-details">
-              <Typography variant="h2">{obj.description.aircraft}</Typography>
-              <Typography variant="h6">{`Tail Number: ${obj.description.tailNumber}`}</Typography>
-              <Typography variant="h6">{`Company: ${wordCapitalization(
-                obj.owner[obj.owner.length - 1].company
-              )}`}</Typography>
-            </Box>
-            <Box className="panel-header-image">
-              <img
-                src={obj.description.image}
-                alt={`${obj.description.aircraft} ${obj.description.tailNumber}`}
-              />
-            </Box>
-            <Box my={1} className="panel-content">
-              <Typography variant="h5">Maintenance Checks</Typography>
-              <Box pt={1}>
-                {obj.maintenanceSchedule.map(maintenance => {
-                  return (
-                    <ProgressBar
-                      start={maintenance.lastCompletedHours}
-                      end={
-                        maintenance.lastCompletedHours + maintenance.maxHours
-                      }
-                      current={obj.flightHours}
-                      label={`${
-                        maintenance.type
-                      } Check - Last Completed: ${moment(
-                        maintenance.lastCompletedDate
-                      ).format("D MMM YYYY")}`}
-                      key={maintenance.type}
-                    />
-                  );
-                })}
+      {data !== undefined && loading === false ? (
+        data.map((obj, index) => {
+          // console.log(obj);
+          return (
+            <TabPanel value={value} index={index} key={`aircraft${index}`}>
+              <Box className="panel-header-details">
+                <Typography variant="h2">{obj.description.aircraft}</Typography>
+                <Typography variant="h6">{`Tail Number: ${obj.description.tailNumber}`}</Typography>
+                <Typography variant="h6">{`Company: ${wordCapitalization(
+                  obj.owner[obj.owner.length - 1].company
+                )}`}</Typography>
+                <Typography variant="h6">{`Flight Hours: ${obj.flightHours}`}</Typography>
+                <HistoryTable
+                  objArray={obj.owner}
+                  mapping={{
+                    company: "Company",
+                    purchaseDate: "Purchase Date",
+                    soldDate: "Sold Date"
+                  }}
+                  large={true}
+                />
               </Box>
-            </Box>
-            <Box my={1} className="panel-content">
-              <Typography variant="h5">Parts Provenance</Typography>
-              <Box pt={1}>
-                {obj.partsList.length > 0 && (
-                  <PartProvenance parts={obj.partsList} />
+              <Box className="panel-header-image">
+                <img
+                  src={obj.description.image}
+                  alt={`${obj.description.aircraft} ${obj.description.tailNumber}`}
+                />
+              </Box>
+              <Box my={1} className="panel-content">
+                <Typography variant="h5">Maintenance Checks</Typography>
+                <Box pt={1}>
+                  {obj.maintenanceSchedule.map(maintenance => {
+                    return (
+                      <ProgressBar
+                        start={maintenance.lastCompletedHours}
+                        end={
+                          maintenance.lastCompletedHours + maintenance.maxHours
+                        }
+                        current={obj.flightHours}
+                        label={`${maintenance.type} Check - Last Completed: ${
+                          moment(maintenance.lastCompletedDate).isValid()
+                            ? moment(maintenance.lastCompletedDate).format(
+                                "D MMM YYYY"
+                              )
+                            : "N/A"
+                        }`}
+                        key={maintenance.type}
+                      />
+                    );
+                  })}
+                </Box>
+              </Box>
+              <Box my={1} className="panel-content">
+                <Typography variant="h5">Parts Provenance</Typography>
+                <Box pt={1}>
+                  {obj.partsList.length > 0 && (
+                    <PartProvenance parts={obj.partsList} refresh={refresh} />
+                  )}
+                </Box>
+              </Box>
+              <Box my={1} className="panel-content">
+                <Typography variant="h5">Maintenance Reports</Typography>
+                {obj.maintenanceReports.length > 0 && (
+                  <Box pt={1}>
+                    {obj.maintenanceReports.map((report, index) => (
+                      <MaintenanceRecordPanel report={report} key={index} />
+                    ))}
+                  </Box>
                 )}
               </Box>
-            </Box>
-            <Box my={1} className="panel-content">
-              <Typography variant="h5">Maintenance Reports</Typography>
-              {obj.maintenanceReports.length > 0 && (
-                <Box pt={1}>
-                  {obj.maintenanceReports.map((report, index) => (
-                    <MaintenanceRecordPanel report={report} key={index} />
-                  ))}
-                </Box>
-              )}
-            </Box>
-          </TabPanel>
-        );
-      })}
+            </TabPanel>
+          );
+        })
+      ) : (
+        <div className="loading-refresh-container">
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <IconButton onClick={() => setRefresh(prev => !prev)}>
+              <RefreshIcon style={{ fontSize: 50 }} />
+            </IconButton>
+          )}
+        </div>
+      )}
       <FabButton
         admin={userData.info.type === "administrator"}
         popUp={popUp}
