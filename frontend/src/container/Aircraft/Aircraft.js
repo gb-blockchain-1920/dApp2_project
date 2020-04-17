@@ -176,10 +176,15 @@ export const Aircraft = ({ connected, userData, companies }) => {
         })
       );
     } else {
-      getAircraft(userData.info.aircraft.join(",")).then(res => {
-        setData(res);
-        console.log(res);
-      });
+      getAircraft(userData.info.aircraft.join(","))
+        .then(res => {
+          setData(res);
+          console.log(res);
+        })
+        .catch(e => {
+          console.log(e);
+          setData([]);
+        });
     }
   }, [connected, userData.info.aircraft, refresh]);
 
@@ -209,7 +214,7 @@ export const Aircraft = ({ connected, userData, companies }) => {
             ))}
         </Tabs>
       </TabWrapper>
-      {data.length > 0 &&
+      {data.length > 0 ? (
         data.map((obj, index) => {
           // console.log(obj);
           return (
@@ -256,10 +261,7 @@ export const Aircraft = ({ connected, userData, companies }) => {
                 <Typography variant="h5">Parts Provenance</Typography>
                 <Box pt={1}>
                   {obj.partsList.length > 0 && (
-                    <PartProvenance
-                      parts={obj.partsList}
-                      refresh={refresh}
-                    />
+                    <PartProvenance parts={obj.partsList} refresh={refresh} />
                   )}
                 </Box>
               </Box>
@@ -275,7 +277,10 @@ export const Aircraft = ({ connected, userData, companies }) => {
               </Box>
             </TabPanel>
           );
-        })}
+        })
+      ) : (
+        <div></div>
+      )}
       <FabButton
         admin={userData.info.type === "administrator"}
         popUp={popUp}
