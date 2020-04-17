@@ -7,8 +7,11 @@ import {
   Typography,
   Box,
   AppBar,
-  Snackbar
+  Snackbar,
+  CircularProgress,
+  IconButton
 } from "@material-ui/core";
+import RefreshIcon from "@material-ui/icons/Refresh";
 import MuiAlert from "@material-ui/lab/Alert";
 import { ProgressBar } from "../../components/ProgressBar/ProgressBar";
 import "./Aircraft.css";
@@ -25,6 +28,7 @@ import { NewPart } from "../../components/Forms/NewPart";
 import { ReportMaintenance } from "../../components/Forms/ReportMaintenance";
 import { SellAircraft } from "../../components/Forms/SellAircraft";
 import { UpdateHours } from "../../components/Forms/UpdateHours";
+import { HistoryTable } from "../../components/HistoryTable/HistoryTable";
 
 //from: https://material-ui.com/components/tabs/
 
@@ -100,6 +104,7 @@ export const Aircraft = ({ connected, userData, companies }) => {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [transaction, setTransaction] = React.useState(null);
   const [refresh, setRefresh] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -118,7 +123,8 @@ export const Aircraft = ({ connected, userData, companies }) => {
   const transactionResponse = res => {
     setSnackbarOpen(true); //open snackbar
     setTransaction(res); //set transaction status
-    if (res) { //if transaction is successful, force refresh data
+    if (res) {
+      //if transaction is successful, force refresh data
       setRefresh(prev => !prev);
     }
   };
@@ -180,10 +186,12 @@ export const Aircraft = ({ connected, userData, companies }) => {
         })
       );
     } else {
+      setLoading(true);
       getAircraft(userData.info.aircraft.join(","))
         .then(res => {
           setData(res);
           console.log(res);
+          setLoading(false);
         })
         .catch(e => {
           console.log(e);
@@ -209,7 +217,7 @@ export const Aircraft = ({ connected, userData, companies }) => {
           onChange={handleChange}
           className={classes.tabs}
         >
-          {data.length > 0 &&
+          {data !== undefined &&
             data.map((obj, index) => (
               <Tab
                 label={obj.description.tailNumber}
@@ -219,7 +227,7 @@ export const Aircraft = ({ connected, userData, companies }) => {
             ))}
         </Tabs>
       </TabWrapper>
-      {data.length > 0 ? (
+      {data !== undefined && loading === false ? (
         data.map((obj, index) => {
           // console.log(obj);
           return (
@@ -231,6 +239,15 @@ export const Aircraft = ({ connected, userData, companies }) => {
                   obj.owner[obj.owner.length - 1].company
                 )}`}</Typography>
                 <Typography variant="h6">{`Flight Hours: ${obj.flightHours}`}</Typography>
+                <HistoryTable
+                  objArray={obj.owner}
+                  mapping={{
+                    company: "Company",
+                    purchaseDate: "Purchase Date",
+                    soldDate: "Sold Date"
+                  }}
+                  large={true}
+                />
               </Box>
               <Box className="panel-header-image">
                 <img
@@ -284,7 +301,15 @@ export const Aircraft = ({ connected, userData, companies }) => {
           );
         })
       ) : (
-        <div></div>
+        <div className="loading-refresh-container">
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <IconButton onClick={() => setRefresh(prev => !prev)}>
+              <RefreshIcon style={{ fontSize: 50 }} />
+            </IconButton>
+          )}
+        </div>
       )}
       <FabButton
         admin={userData.info.type === "administrator"}
