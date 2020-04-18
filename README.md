@@ -164,6 +164,7 @@ _Functions for managing data and interacting with data from outside Hyperledger_
 ## Notes
 
 - Validation with JSON web tokens is not a good security practice. JWT was used for ease of implementation for PoC.
+- Deployed site login instructions: If it is in offline mode (icon indicator is red in the top right corner) - any username/password combination will work.
 
 ## Resources
 
