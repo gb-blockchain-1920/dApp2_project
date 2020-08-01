@@ -5,17 +5,17 @@
     "main.js.map": "/dApp2_project/static/js/main.ae96f9a3.chunk.js.map",
     "runtime-main.js": "/dApp2_project/static/js/runtime-main.6bc3816d.js",
     "runtime-main.js.map": "/dApp2_project/static/js/runtime-main.6bc3816d.js.map",
-    "static/js/2.10912cb3.chunk.js": "/dApp2_project/static/js/2.10912cb3.chunk.js",
-    "static/js/2.10912cb3.chunk.js.map": "/dApp2_project/static/js/2.10912cb3.chunk.js.map",
+    "static/js/2.287f0919.chunk.js": "/dApp2_project/static/js/2.287f0919.chunk.js",
+    "static/js/2.287f0919.chunk.js.map": "/dApp2_project/static/js/2.287f0919.chunk.js.map",
     "index.html": "/dApp2_project/index.html",
-    "precache-manifest.29a471ac61a9bda85cddb31b61b82dbd.js": "/dApp2_project/precache-manifest.29a471ac61a9bda85cddb31b61b82dbd.js",
+    "precache-manifest.5df438c5c26e07ba075c8294dff46179.js": "/dApp2_project/precache-manifest.5df438c5c26e07ba075c8294dff46179.js",
     "service-worker.js": "/dApp2_project/service-worker.js",
     "static/css/main.d4048aa5.chunk.css.map": "/dApp2_project/static/css/main.d4048aa5.chunk.css.map",
-    "static/js/2.10912cb3.chunk.js.LICENSE.txt": "/dApp2_project/static/js/2.10912cb3.chunk.js.LICENSE.txt"
+    "static/js/2.287f0919.chunk.js.LICENSE.txt": "/dApp2_project/static/js/2.287f0919.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.6bc3816d.js",
-    "static/js/2.10912cb3.chunk.js",
+    "static/js/2.287f0919.chunk.js",
     "static/css/main.d4048aa5.chunk.css",
     "static/js/main.ae96f9a3.chunk.js"
   ]
